@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+model User {
+  id        Int        @id @default(autoincrement())
+  nama      String?    @db.VarChar(255)
+  email     String     @db.VarChar(255) @unique
+  password  String?    @db.VarChar(255)
+  role      String?    @db.VarChar(255)
+  Pengumuman Pengumuman[]
+}
+
+model Pengumuman {
+  id          Int     @id @default(autoincrement())
+  judul       String? @db.VarChar(255)
+  gambar      String? @db.VarChar(255)
+  url_gambar  String? @db.VarChar(255)
+  user_id     Int
+  user        User    @relation(fields: [user_id], references: [id])
+}
+
+model Prodi {
+  id                Int      @id @default(autoincrement())
+  nama              String?  @db.VarChar(255)
+  deskripsi         String?  @db.VarChar(255)
+  visi_misi         String?  @db.VarChar(255)
+  sejarah           String?  @db.VarChar(255)
+  info_lainnya      String?  @db.VarChar(255)
+  logo_prodi        String?  @db.VarChar(255)
+  url_logo_prodi    String?  @db.VarChar(255)
+  logo_universitas  String?  @db.VarChar(255)
+  url_logo_universitas String? @db.VarChar(255)
+  Dosen             Dosen[]
+  Kontak            Kontak[]
+}
+
+model Dosen {
+  id          Int     @id @default(autoincrement())
+  nama        String? @db.VarChar(255)
+  jabatan     String? @db.VarChar(255)
+  gambar      String? @db.VarChar(255)
+  url_gambar  String? @db.VarChar(255)
+  prodi_id    Int
+  prodi       Prodi   @relation(fields: [prodi_id], references: [id])
+  Class       Class[]
+}
+
+model Class {
+  id            Int      @id @default(autoincrement())
+  nama          String?  @db.VarChar(255)
+  sks           String?  @db.VarChar(255)
+  waktu_mulai   String?  @db.VarChar(255)
+  waktu_selesai String?  @db.VarChar(255)
+  dosen_id      Int
+  dosen         Dosen    @relation(fields: [dosen_id], references: [id])
+  Mahasiswa_has_class Mahasiswa_has_class[]
+  Absen         Absen[]
+}
+
+model Mahasiswa {
+  id               Int                 @id @default(autoincrement())
+  nama             String?             @db.VarChar(255)
+  nim              Int?
+  angkatan         String?             @db.VarChar(255)
+  Mahasiswa_has_class Mahasiswa_has_class[]
+}
+
+model Mahasiswa_has_class {
+  Mahasiswa_id     Int
+  class_id         Int
+  mahasiswa        Mahasiswa @relation(fields: [Mahasiswa_id], references: [id])
+  class            Class     @relation(fields: [class_id], references: [id])
+
+  @@id([Mahasiswa_id, class_id])
+}
+
+model Absen {
+  id        Int     @id @default(autoincrement())
+  kehadiran String? @db.VarChar(255)
+  tanggal   String? @db.VarChar(255)
+  class_id  Int
+  class     Class   @relation(fields: [class_id], references: [id])
+}
+
+model Kontak {
+  id          Int     @id @default(autoincrement())
+  email       String? @db.VarChar(255)
+  telephone   String? @db.VarChar(255)
+  alamat      String? @db.VarChar(255)
+  sosial_media String? @db.VarChar(255)
+  prodi_id    Int
+  prodi       Prodi   @relation(fields: [prodi_id], references: [id])
+}
