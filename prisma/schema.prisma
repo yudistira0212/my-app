@@ -52,8 +52,12 @@ model Dosen {
   id          Int     @id @default(autoincrement())
   nama        String? @db.VarChar(255)
   jabatan     String? @db.VarChar(255)
-  gambar      String? @db.VarChar(255)
+  pendidikan  String? @db.VarChar(255)
+  biografi    String? @db.VarChar(255)
+  publikasi   String? @db.VarChar(255)
+  kontak      String? @db.VarChar(255)
   url_gambar  String? @db.VarChar(255)
+  gambar      String? @db.VarChar(255)
   prodi_id    Int
   prodi       Prodi   @relation(fields: [prodi_id], references: [id])
   Class       Class[]
