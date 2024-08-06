@@ -3,40 +3,27 @@
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import React, { useState } from "react";
-import { ref, deleteObject } from "firebase/storage";
-import { storage } from "@/app/lib/firebase/firebase";
-import { deleteImage } from "@/app/lib/controllers/imageControllers";
 
-interface deleteDosenProps {
+interface DeleteClassProps {
   id: number;
-  image: string;
   onSuccess: () => void;
 }
 
-const DeleteDosen: React.FC<deleteDosenProps> = ({ id, image, onSuccess }) => {
+const DeleteClass: React.FC<DeleteClassProps> = ({ id, onSuccess }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleDelete = async () => {
     setIsLoading(true);
-
-    const rute = "dosen";
-    const deleteResult = await deleteImage(rute, image);
-
-    if (!deleteResult) {
-      setIsLoading(false);
-      console.log("gagal uplaod image");
-
-      return;
-    }
     try {
-      await axios.delete(`/api/dosen/${id}/delete`);
+      await axios.delete(`/api/class/${id}/delete`);
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);
     } catch (error) {
-      console.error("Error deleting dosen:", error);
+      console.error("Error deleting class:", error);
+      setErrorMessage("Error deleting class");
     } finally {
       setIsLoading(false);
     }
@@ -81,10 +68,10 @@ const DeleteDosen: React.FC<deleteDosenProps> = ({ id, image, onSuccess }) => {
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title className="text-xl font-semibold">
-                    Delete Dosen
+                    Delete Class
                   </Dialog.Title>
                   <Dialog.Description className="mt-2 mb-4">
-                    Yakin ingin menghapus Dosen ini?
+                    Are you sure you want to delete this class?
                   </Dialog.Description>
                   {errorMessage && (
                     <div className="bg-red-100 p-2 rounded mb-4">
@@ -116,4 +103,4 @@ const DeleteDosen: React.FC<deleteDosenProps> = ({ id, image, onSuccess }) => {
   );
 };
 
-export default DeleteDosen;
+export default DeleteClass;

@@ -15,6 +15,7 @@ export async function GET(
   try {
     const classes = await prisma.class.findUnique({
       where: { id: Number(id) },
+      include: { dosen: true },
     });
     if (classes) {
       return NextResponse.json(classes, { status: 200 });

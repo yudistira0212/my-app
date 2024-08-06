@@ -64,13 +64,13 @@ model Dosen {
 }
 
 model Class {
-  id            Int      @id @default(autoincrement())
-  nama          String?  @db.VarChar(255)
-  sks           String?  @db.VarChar(255)
-  waktu_mulai   String?  @db.VarChar(255)
-  waktu_selesai String?  @db.VarChar(255)
+  id            Int        @id @default(autoincrement())
+  nama          String?    @db.VarChar(255)
+  sks           String?    @db.VarChar(255)
+  waktu_mulai   DateTime? 
+  waktu_selesai DateTime? 
   dosen_id      Int
-  dosen         Dosen    @relation(fields: [dosen_id], references: [id])
+  dosen         Dosen      @relation(fields: [dosen_id], references: [id])
   Mahasiswa_has_class Mahasiswa_has_class[]
   Absen         Absen[]
 }

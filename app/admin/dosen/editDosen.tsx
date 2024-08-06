@@ -128,15 +128,15 @@ const EditDosen: React.FC<EditProps> = ({
 
   return (
     <div>
-      <a
+      <button
         onClick={() => {
           setModalIsOpen(true);
           getDataDosen();
         }}
-        className="font-medium text-blue-600 dark:text-blue-500 hover:underline hover:cursor-pointer"
+        className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-md flex"
       >
         Edit
-      </a>
+      </button>
 
       <Transition appear show={modalIsOpen} as={React.Fragment}>
         <Dialog
