@@ -7,6 +7,8 @@ export async function PATCH(req: NextRequest, { params }: any) {
   const { id } = params;
   const body = await req.json();
 
+  console.log(body);
+
   try {
     const updatedProdi = await prisma.prodi.update({
       where: { id: Number(id) },

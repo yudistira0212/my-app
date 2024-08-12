@@ -1,10 +1,33 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import InputPengumuman from "./inputPengumuman";
+import ListPengumuman from "./ListPengumuman";
+import { Pengumuman } from "@prisma/client";
+import axios from "axios";
 
 const PagePengumuman = () => {
+  const [listData, setListData] = useState<Pengumuman[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`/api/pengumuman`);
+      console.log(response.data);
+      setListData(response.data);
+    } catch (error) {
+      console.log("filed fetch data", error);
+    }
+  };
+
   return (
     <div>
       <div className=" flex flex-col bg-white p-4">
         <h1 className="text-2xl font-bold mb-6">Input Pengumuman</h1>
+        <InputPengumuman onSuccess={fetchData} />
+        <ListPengumuman listData={listData} fechingData={fetchData} />
         <form action="">
           <div className="flex flex-wrap w-full  bg-white  ">
             <div className="flex flex-col w-full  ">

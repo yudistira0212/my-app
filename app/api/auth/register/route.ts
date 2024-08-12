@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       data: {
         email: body.email,
         password: hashedPassword,
-        nama: body.nama,
+        name: body.nama,
         role: "admin", // Set role sesuai kebutuhan Anda
       },
     });

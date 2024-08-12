@@ -1,10 +1,12 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "nama" VARCHAR(45),
-    "email" VARCHAR(45) NOT NULL,
-    "password" VARCHAR(45),
-    "role" VARCHAR(45),
+    "nama" VARCHAR(255),
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255),
+    "role" VARCHAR(255),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -12,10 +14,13 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Pengumuman" (
     "id" SERIAL NOT NULL,
-    "judul" VARCHAR(45),
-    "gambar" VARCHAR(45),
-    "url_gambar" VARCHAR(45),
+    "judul" VARCHAR(255) NOT NULL,
+    "text" VARCHAR(255),
+    "gambar" VARCHAR(255),
+    "url_gambar" VARCHAR(255),
     "user_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Pengumuman_pkey" PRIMARY KEY ("id")
 );
@@ -23,15 +28,17 @@ CREATE TABLE "Pengumuman" (
 -- CreateTable
 CREATE TABLE "Prodi" (
     "id" SERIAL NOT NULL,
-    "nama" VARCHAR(45),
-    "deskripsi" VARCHAR(45),
-    "visi_misi" VARCHAR(45),
-    "sejarah" VARCHAR(45),
-    "info_lainnya" VARCHAR(45),
-    "logo_prodi" VARCHAR(45),
-    "url_logo_prodi" VARCHAR(45),
-    "logo_universitas" VARCHAR(45),
-    "url_logo_universitas" VARCHAR(45),
+    "nama" VARCHAR(255),
+    "deskripsi" VARCHAR(255),
+    "visi_misi" VARCHAR(255),
+    "sejarah" VARCHAR(255),
+    "info_lainnya" VARCHAR(255),
+    "logo_prodi" VARCHAR(255),
+    "url_logo_prodi" VARCHAR(255),
+    "logo_universitas" VARCHAR(255),
+    "url_logo_universitas" VARCHAR(255),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Prodi_pkey" PRIMARY KEY ("id")
 );
@@ -39,11 +46,17 @@ CREATE TABLE "Prodi" (
 -- CreateTable
 CREATE TABLE "Dosen" (
     "id" SERIAL NOT NULL,
-    "nama" VARCHAR(45),
-    "jabatan" VARCHAR(45),
-    "gambar" VARCHAR(45),
-    "url_gambar" VARCHAR(45),
+    "nama" VARCHAR(255),
+    "jabatan" VARCHAR(255),
+    "pendidikan" VARCHAR(255),
+    "biografi" VARCHAR(255),
+    "publikasi" VARCHAR(255),
+    "kontak" VARCHAR(255),
+    "url_gambar" VARCHAR(255),
+    "gambar" VARCHAR(255),
     "prodi_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Dosen_pkey" PRIMARY KEY ("id")
 );
@@ -51,11 +64,13 @@ CREATE TABLE "Dosen" (
 -- CreateTable
 CREATE TABLE "Class" (
     "id" SERIAL NOT NULL,
-    "nama" VARCHAR(45),
-    "sks" VARCHAR(45),
-    "waktu_mulai" VARCHAR(45),
-    "waktu_selesai" VARCHAR(45),
+    "nama" VARCHAR(255),
+    "sks" VARCHAR(255),
+    "waktu_mulai" TIMESTAMP(3),
+    "waktu_selesai" TIMESTAMP(3),
     "dosen_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Class_pkey" PRIMARY KEY ("id")
 );
@@ -63,9 +78,11 @@ CREATE TABLE "Class" (
 -- CreateTable
 CREATE TABLE "Mahasiswa" (
     "id" SERIAL NOT NULL,
-    "nama" VARCHAR(45),
+    "nama" VARCHAR(255),
     "nim" INTEGER,
-    "angkatan" VARCHAR(45),
+    "angkatan" VARCHAR(255),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Mahasiswa_pkey" PRIMARY KEY ("id")
 );
@@ -74,6 +91,8 @@ CREATE TABLE "Mahasiswa" (
 CREATE TABLE "Mahasiswa_has_class" (
     "Mahasiswa_id" INTEGER NOT NULL,
     "class_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Mahasiswa_has_class_pkey" PRIMARY KEY ("Mahasiswa_id","class_id")
 );
@@ -81,9 +100,11 @@ CREATE TABLE "Mahasiswa_has_class" (
 -- CreateTable
 CREATE TABLE "Absen" (
     "id" SERIAL NOT NULL,
-    "kehadiran" VARCHAR(45),
-    "tanggal" VARCHAR(45),
+    "kehadiran" VARCHAR(255),
+    "tanggal" VARCHAR(255),
     "class_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Absen_pkey" PRIMARY KEY ("id")
 );
@@ -91,11 +112,13 @@ CREATE TABLE "Absen" (
 -- CreateTable
 CREATE TABLE "Kontak" (
     "id" SERIAL NOT NULL,
-    "email" VARCHAR(45),
-    "telephone" VARCHAR(45),
-    "alamat" VARCHAR(45),
-    "sosial_media" VARCHAR(45),
+    "email" VARCHAR(255),
+    "telephone" VARCHAR(255),
+    "alamat" VARCHAR(255),
+    "sosial_media" VARCHAR(255),
     "prodi_id" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Kontak_pkey" PRIMARY KEY ("id")
 );

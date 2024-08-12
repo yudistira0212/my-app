@@ -16,6 +16,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [session]);
 
+  console.log(session?.user);
+
   if (status === "loading") {
     return <p>Loading...</p>;
   }

@@ -8,12 +8,12 @@ const Sidebar = () => {
 
   return (
     <div>
-      <button
+      {/* <button
         className={` ${"md:hidden" || isOpen} p-4`}
         onClick={() => setIsOpen(!isOpen)}
       >
         ☰
-      </button>
+      </button> */}
       <div
         className={`fixed  min-h-screen inset-y-0 left-0 bg-[#F1EFE5]  text-white w-64 space-y-6 py-7 px-2 transform ${
           isOpen ? "-translate-x-0" : "-translate-x-full"

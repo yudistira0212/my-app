@@ -11,25 +11,32 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 
 model User {
-  id        Int        @id @default(autoincrement())
-  nama      String?    @db.VarChar(255)
-  email     String     @db.VarChar(255) @unique
-  password  String?    @db.VarChar(255)
-  role      String?    @db.VarChar(255)
+  id              Int        @id @default(autoincrement())
+  name            String?    @db.VarChar(255)
+  email           String     @db.VarChar(255) @unique
+  image           String?    @db.VarChar(255)
+  image_name      String?    @db.VarChar(255)
+  password        String?    @db.VarChar(255)
+  role            String?    @db.VarChar(255)
+  createdAt       DateTime  @default(now()) 
+  updatedAt       DateTime  @updatedAt
   Pengumuman Pengumuman[]
 }
 
 model Pengumuman {
   id          Int     @id @default(autoincrement())
-  judul       String? @db.VarChar(255)
+  judul       String @db.VarChar(255)
+  text        String? @db.VarChar(255)
   gambar      String? @db.VarChar(255)
   url_gambar  String? @db.VarChar(255)
   user_id     Int
+  createdAt  DateTime  @default(now()) 
+  updatedAt  DateTime  @updatedAt
   user        User    @relation(fields: [user_id], references: [id])
 }
 
@@ -44,6 +51,8 @@ model Prodi {
   url_logo_prodi    String?  @db.VarChar(255)
   logo_universitas  String?  @db.VarChar(255)
   url_logo_universitas String? @db.VarChar(255)
+  createdAt  DateTime  @default(now()) 
+  updatedAt  DateTime  @updatedAt
   Dosen             Dosen[]
   Kontak            Kontak[]
 }
@@ -59,6 +68,8 @@ model Dosen {
   url_gambar  String? @db.VarChar(255)
   gambar      String? @db.VarChar(255)
   prodi_id    Int
+  createdAt  DateTime  @default(now()) 
+  updatedAt  DateTime  @updatedAt
   prodi       Prodi   @relation(fields: [prodi_id], references: [id])
   Class       Class[]
 }
@@ -70,6 +81,8 @@ model Class {
   waktu_mulai   DateTime? 
   waktu_selesai DateTime? 
   dosen_id      Int
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt
   dosen         Dosen      @relation(fields: [dosen_id], references: [id])
   Mahasiswa_has_class Mahasiswa_has_class[]
   Absen         Absen[]
@@ -80,12 +93,16 @@ model Mahasiswa {
   nama             String?             @db.VarChar(255)
   nim              Int?
   angkatan         String?             @db.VarChar(255)
+  createdAt        DateTime            @default(now()) 
+  updatedAt        DateTime            @updatedAt
   Mahasiswa_has_class Mahasiswa_has_class[]
 }
 
 model Mahasiswa_has_class {
   Mahasiswa_id     Int
   class_id         Int
+  createdAt        DateTime  @default(now()) 
+  updatedAt        DateTime  @updatedAt
   mahasiswa        Mahasiswa @relation(fields: [Mahasiswa_id], references: [id])
   class            Class     @relation(fields: [class_id], references: [id])
 
@@ -97,6 +114,8 @@ model Absen {
   kehadiran String? @db.VarChar(255)
   tanggal   String? @db.VarChar(255)
   class_id  Int
+  createdAt DateTime  @default(now()) 
+  updatedAt DateTime  @updatedAt
   class     Class   @relation(fields: [class_id], references: [id])
 }
 
@@ -107,5 +126,7 @@ model Kontak {
   alamat      String? @db.VarChar(255)
   sosial_media String? @db.VarChar(255)
   prodi_id    Int
+  createdAt  DateTime  @default(now()) 
+  updatedAt  DateTime  @updatedAt
   prodi       Prodi   @relation(fields: [prodi_id], references: [id])
 }
