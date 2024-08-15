@@ -8,19 +8,19 @@ import { useSession } from "next-auth/react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { push } = useRouter();
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      push("/login");
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     push("/login");
+  //   }
+  // }, [session]);
 
-  console.log(session?.user);
+  // console.log(session?.user);
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
+  // if (status === "loading") {
+  //   return <p>Loading...</p>;
+  // }
 
   return (
     <div className="min-h-screen bg-gray-100">

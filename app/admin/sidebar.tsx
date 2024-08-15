@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import DashboarUtama from "./utama/page";
+// import DashboarUtama from "./utama/page";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ const Sidebar = () => {
         <ul className="space-y-2 font-medium">
           <li>
             <Link
-              href="./utama"
+              href="./dashboard"
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-[#495579] hover:text-white group"
             >
               <svg

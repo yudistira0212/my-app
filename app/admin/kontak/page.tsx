@@ -1,64 +1,65 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+import axios from "axios";
+import Loading from "@/app/components/common/loading/Loading";
+import KontakHeader from "./components/KontakHeader";
+import KontakForm from "./components/KontakForm";
 
 const PageKontak = () => {
+  const [loading, setLoading] = useState(false);
+  const [isEdit, setIsEdit] = useState(true);
+  const [error, setError] = useState("");
+  const [kontakData, setKontakData] = useState({
+    email: "",
+    telephone: "",
+    alamat: "",
+    sosialMedia: "",
+  });
+
+  useEffect(() => {
+    fetchKontak();
+  }, []);
+
+  const fetchKontak = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/api/kontak/1");
+      const data = res.data;
+
+      setKontakData({
+        email: data.email,
+        telephone: data.telephone,
+        alamat: data.alamat,
+        sosialMedia: data.sosial_media,
+      });
+      setError("");
+    } catch (error) {
+      console.error("Error fetching kontak:", error);
+      setError("Failed to fetch kontak data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <div className=" flex flex-col bg-white p-4">
-        <div>
-          <h1 className="text-2xl font-bold mb-6">Input Kontak</h1>
-        </div>
-
-        <form action="">
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Email Podi
-            </label>
-            <input
-              className="w-full  text-sm text-gray-900 border border-gray-300 rounded-lg p-2 focus:outline-none bg-gray-50"
-              placeholder="Masukan Email Prodi"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Telephon Prodi
-            </label>
-            <input
-              className="w-full  text-sm text-gray-900 border border-gray-300 rounded-lg p-2 focus:outline-none bg-gray-50"
-              placeholder="Masukan Telephon Prodi"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Alamat Prodi
-            </label>
-            <input
-              className="w-full  text-sm text-gray-900 border border-gray-300 rounded-lg p-2 focus:outline-none bg-gray-50"
-              placeholder="Masukan Alamat Prodi"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">
-              Url Sosial Media
-            </label>
-            <input
-              className="w-full  text-sm text-gray-900 border border-gray-300 rounded-lg p-2 focus:outline-none bg-gray-50"
-              placeholder="Masukan Jabatan"
-            />
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="text-white bg-[#495579] hover:bg-blue-800  focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-            >
-              Simpan
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className="flex flex-col bg-white p-4">
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <KontakHeader isEdit={isEdit} setIsEdit={setIsEdit} />
+          <KontakForm
+            isEdit={isEdit}
+            kontakData={kontakData}
+            setKontakData={setKontakData}
+            setError={setError}
+            setLoading={setLoading}
+            fetchKontak={fetchKontak}
+          />
+        </>
+      )}
     </div>
   );
 };

@@ -1,1 +1,7 @@
 GET http://localhost:3000/api/users/2
+
+###
+get http://localhost:3000/api/kontak/1
+
+
+

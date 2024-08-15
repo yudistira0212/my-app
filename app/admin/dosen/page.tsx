@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import DosenInput from "./dosenInput";
-import TableDosen from "./tableDosen";
+import DosenInput from "./components/dosenInput";
+import TableDosen from "./components/tableDosen";
 import axios from "axios";
 import { Dosen } from "@prisma/client";
 
@@ -28,7 +28,10 @@ const PageDosen = () => {
   return (
     <div>
       <div className=" flex flex-col bg-white p-4">
-        <DosenInput onSuccess={getDosen} />
+        <h1 className="text-2xl font-bold mb-6">Dosen</h1>
+        <div className="py-4">
+          <DosenInput onSuccess={getDosen} />
+        </div>
         <div>
           <TableDosen dosenList={dosen} fetchDosen={fetchDosen} />
         </div>
