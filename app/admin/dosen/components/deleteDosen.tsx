@@ -1,13 +1,10 @@
 "use client";
 
-import { Dialog, Transition } from "@headlessui/react";
-import axios from "axios";
 import React, { useState } from "react";
-import { ref, deleteObject } from "firebase/storage";
-import { storage } from "@/app/lib/firebase/firebase";
 import { deleteImage } from "@/app/lib/controllers/imageControllers";
 import { FaTrashAlt } from "react-icons/fa";
 import Confirm from "@/app/components/ui/modals/Confirm";
+import apiClient from "@/app/lib/axios/axios";
 
 interface deleteDosenProps {
   id: number;
@@ -33,7 +30,7 @@ const DeleteDosen: React.FC<deleteDosenProps> = ({ id, image, onSuccess }) => {
       return;
     }
     try {
-      await axios.delete(`/api/dosen/${id}/delete`);
+      await apiClient.delete(`/api/dosen/${id}/delete`);
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);

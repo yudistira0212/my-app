@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+
 import EditDosen from "./editDosen";
 import DeleteDosen from "./deleteDosen";
 import { Dosen } from "@prisma/client";

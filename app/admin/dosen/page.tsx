@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import DosenInput from "./components/dosenInput";
 import TableDosen from "./components/tableDosen";
-import axios from "axios";
 import { Dosen } from "@prisma/client";
+import apiClient from "@/app/lib/axios/axios";
 
 const PageDosen = () => {
   const [dosen, setDosenList] = useState<Dosen[]>([]);
@@ -19,7 +19,7 @@ const PageDosen = () => {
 
   const fetchDosen = async () => {
     try {
-      const response = await axios.get("/api/dosen");
+      const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
     } catch (error) {
       console.error("Error fetching dosen data:", error);

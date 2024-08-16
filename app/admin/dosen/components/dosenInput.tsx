@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import axios from "axios";
-import { storage } from "@/app/lib/firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 import Image from "next/image";
-import { Dialog, Transition } from "@headlessui/react";
+
 import { uploadImage } from "@/app/lib/controllers/imageControllers";
 import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
+import apiClient from "@/app/lib/axios/axios";
 
 interface inputDosenProps {
   onSuccess: () => void;
@@ -76,11 +75,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     };
 
     try {
-      const response = await axios.post("/api/dosen", dosenData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.post("/api/dosen", dosenData);
 
       if (response.status === 201) {
         console.log("Dosen created successfully:", response.data);

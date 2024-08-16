@@ -1,13 +1,11 @@
 "use client";
 
-import { Dialog, Transition } from "@headlessui/react";
-import axios from "axios";
 import React, { useState } from "react";
-import { ref, deleteObject } from "firebase/storage";
-import { storage } from "@/app/lib/firebase/firebase";
+
 import { deleteImage } from "@/app/lib/controllers/imageControllers";
 import { FaTrashAlt } from "react-icons/fa";
 import Confirm from "@/app/components/ui/modals/Confirm";
+import apiClient from "@/app/lib/axios/axios";
 
 interface DeletePengumumanProps {
   id: number;
@@ -37,7 +35,7 @@ const DeletePengumuman: React.FC<DeletePengumumanProps> = ({
       return;
     }
     try {
-      await axios.delete(`/api/pengumuman/${id}/delete`);
+      await apiClient.delete(`/api/pengumuman/${id}/delete`);
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);

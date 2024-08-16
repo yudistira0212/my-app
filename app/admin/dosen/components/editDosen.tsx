@@ -1,21 +1,13 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { storage } from "@/app/lib/firebase/firebase";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+import React, { useRef, useState } from "react";
+
 import Image from "next/image";
-import { Dialog, Transition } from "@headlessui/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+
 import { updateImage } from "@/app/lib/controllers/imageControllers";
 import { FaEdit } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
+import apiClient from "@/app/lib/axios/axios";
 
 interface EditProps {
   // show: boolean;
@@ -43,7 +35,7 @@ const EditDosen: React.FC<EditProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getDataDosen = async () => {
-    await axios
+    await apiClient
       .get(`/api/dosen/${id}`)
       .then((response) => {
         const dosen = response.data;
@@ -107,11 +99,10 @@ const EditDosen: React.FC<EditProps> = ({
     };
 
     try {
-      const response = await axios.put(`/api/dosen/${id}/update`, dosenData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.put(
+        `/api/dosen/${id}/update`,
+        dosenData
+      );
 
       if (response.status === 200) {
         setUploading(false);

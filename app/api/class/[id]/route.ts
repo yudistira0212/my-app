@@ -15,7 +15,12 @@ export async function GET(
   try {
     const classes = await prisma.class.findUnique({
       where: { id: Number(id) },
-      include: { dosen: true },
+      include: {
+        dosen: true,
+        Mahasiswa_has_class: {
+          include: { mahasiswa: true },
+        },
+      },
     });
     if (classes) {
       return NextResponse.json(classes, { status: 200 });

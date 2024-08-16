@@ -1,9 +1,11 @@
+"use client";
+
 import React, { useState } from "react";
 
-import axios from "axios";
 import { toast } from "react-toastify";
 import Input from "@/app/components/common/input/Input";
 import Button from "@/app/components/common/button/Button";
+import apiClient from "@/app/lib/axios/axios";
 
 interface KontakFormProps {
   isEdit: boolean;
@@ -36,23 +38,20 @@ const KontakForm: React.FC<KontakFormProps> = ({
 
     try {
       let response = null;
-      const cekData = await axios.get(`/api/kontak`);
+
+      const data = {
+        email: kontakData.email,
+        telephone: kontakData.telephone,
+        alamat: kontakData.alamat,
+        sosial_media: kontakData.sosialMedia,
+        prodi_id: 1,
+      };
+
+      const cekData = await apiClient.get(`/api/kontak`);
       if (cekData.data.length === 0) {
-        response = await axios.post(`/api/kontak`, {
-          email: kontakData.email,
-          telephone: kontakData.telephone,
-          alamat: kontakData.alamat,
-          sosial_media: kontakData.sosialMedia,
-          prodi_id: 1,
-        });
+        response = await apiClient.post(`/api/kontak`, data);
       } else {
-        response = await axios.patch(`/api/kontak/1`, {
-          email: kontakData.email,
-          telephone: kontakData.telephone,
-          alamat: kontakData.alamat,
-          sosial_media: kontakData.sosialMedia,
-          prodi_id: 1,
-        });
+        response = await apiClient.patch(`/api/kontak/1`, data);
       }
 
       if (response.status === 200 || response.status === 201) {

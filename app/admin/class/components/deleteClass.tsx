@@ -1,8 +1,9 @@
 "use client";
 
 import Confirm from "@/app/components/ui/modals/Confirm";
+import apiClient from "@/app/lib/axios/axios";
 import { Dialog, Transition } from "@headlessui/react";
-import axios from "axios";
+
 import React, { useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
@@ -20,7 +21,7 @@ const DeleteClass: React.FC<DeleteClassProps> = ({ id, onSuccess }) => {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await axios.delete(`/api/class/${id}/delete`);
+      await apiClient.delete(`/api/class/${id}/delete`);
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);

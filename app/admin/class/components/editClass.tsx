@@ -1,9 +1,9 @@
 "use client";
 
 import Modals from "@/app/components/ui/modals/Modals";
+import apiClient from "@/app/lib/axios/axios";
 import { Dialog, Transition } from "@headlessui/react";
 import { Dosen } from "@prisma/client";
-import axios from "axios";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
@@ -21,6 +21,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
     waktu_mulai: "",
     waktu_selesai: "",
     dosen_id: "",
+    ruangan: "",
   });
 
   const [dosenList, setDosenList] = useState<Dosen[]>([]);
@@ -33,7 +34,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
 
   const fetchDosen = async () => {
     try {
-      const response = await axios.get("/api/dosen");
+      const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
     } catch (error) {
       console.error("Error fetching dosen data:", error);
@@ -42,7 +43,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
 
   const fetchClassData = async (id: number) => {
     try {
-      const response = await axios.get(`/api/class/${id}`);
+      const response = await apiClient.get(`/api/class/${id}`);
       const data = response.data;
 
       const formatDate = (date: Date | null): string => {
@@ -56,8 +57,8 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
         waktu_mulai: formatDate(data.waktu_mulai),
         waktu_selesai: formatDate(data.waktu_selesai),
         dosen_id: data.dosen_id.toString(),
+        ruangan: data.ruangan,
       });
-      console.log(formData);
     } catch (error) {
       console.error("Error fetching class data:", error);
     }
@@ -91,12 +92,10 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
       dosen_id: parseInt(formData.dosen_id.toString(), 10), // Ensure dosen_id is integer
     };
 
+    console.log(payload.ruangan);
+
     try {
-      const response = await axios.put(`/api/class/${id}/update`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.put(`/api/class/${id}/update`, payload);
 
       if (response.status === 200) {
         console.log("updated successfully:", response.data);
@@ -112,6 +111,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
           waktu_mulai: "",
           waktu_selesai: "",
           dosen_id: "",
+          ruangan: "",
         });
 
         onSuccess();
@@ -156,7 +156,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 value={formData.nama}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -174,7 +174,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 value={formData.sks}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -192,7 +192,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 value={formData.waktu_mulai}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -210,7 +210,25 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 value={formData.waktu_selesai}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="ruangan"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Ruangan
+              </label>
+              <input
+                type="text"
+                id="ruangan"
+                name="ruangan"
+                value={formData.ruangan}
+                onChange={handleChange}
+                required
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -227,7 +245,7 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 value={formData.dosen_id}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               >
                 <option value="">Select a Dosen</option>
                 {dosenList.map((dosen) => (

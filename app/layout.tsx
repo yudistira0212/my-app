@@ -20,10 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
+      <body className={inter.className}>
         <ToastContainer />
-        <body className={inter.className}>{children}</body>
-      </SessionProvider>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }

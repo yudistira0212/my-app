@@ -1,12 +1,9 @@
-// components/ListClass.tsx
-
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Class } from "@prisma/client";
 import { Dosen } from "@prisma/client";
 import moment from "moment";
-import EditDosen from "../dosen/components/editDosen";
+
 import EditClass from "./editClass";
 import DeleteClass from "./deleteClass";
 import ShowClass from "./showClass";

@@ -3,10 +3,11 @@
 import { FaPlus } from "react-icons/fa";
 import { Dialog, Transition } from "@headlessui/react";
 import { Dosen } from "@prisma/client";
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import Modals from "@/app/components/ui/modals/Modals";
+import apiClient from "@/app/lib/axios/axios";
 
 interface inputProps {
   onSuccess: () => void;
@@ -18,6 +19,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
     waktu_mulai: "",
     waktu_selesai: "",
     dosen_id: "",
+    ruangan: "",
   });
 
   const [dosenList, setDosenList] = useState<Dosen[]>([]);
@@ -30,7 +32,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
 
   const fetchDosen = async () => {
     try {
-      const response = await axios.get("/api/dosen");
+      const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
     } catch (error) {
       console.error("Error fetching dosen data:", error);
@@ -57,30 +59,28 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
       waktu_selesai: formData.waktu_selesai
         ? new Date(formData.waktu_selesai).toISOString()
         : null,
-      dosen_id: parseInt(formData.dosen_id.toString(), 10), // Ensure dosen_id is integer
+      dosen_id: parseInt(formData.dosen_id.toString(), 10), // Pastikan dosen_id adalah integer
     };
 
     try {
-      const response = await axios.post("/api/class", payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.post("/api/class", payload); // Menggunakan apiClient
 
-      if (response.status == 201) {
-        console.log("class created successfully:", response.data);
+      if (response.status === 201) {
+        console.log("Class created successfully:", response.data);
 
         alert("Class created successfully!");
         setUploading(false);
         onSuccess();
         setModalIsOpen(false);
-        // Reset form after submission
+
+        // Reset form setelah submit
         setFormData({
           nama: "",
           sks: 0,
           waktu_mulai: "",
           waktu_selesai: "",
           dosen_id: "",
+          ruangan: "",
         });
       }
     } catch (error) {
@@ -172,6 +172,23 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 id="waktu_selesai"
                 name="waktu_selesai"
                 value={formData.waktu_selesai}
+                onChange={handleChange}
+                required
+                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="waktu_selesai"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Ruangan
+              </label>
+              <input
+                type="text"
+                id="ruangan"
+                name="ruangan"
+                value={formData.ruangan}
                 onChange={handleChange}
                 required
                 className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"

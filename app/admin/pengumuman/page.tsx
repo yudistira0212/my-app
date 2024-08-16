@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import InputPengumuman from "./components/inputPengumuman";
 import ListPengumuman from "./components/ListPengumuman";
 import { Pengumuman } from "@prisma/client";
-import axios from "axios";
+import apiClient from "@/app/lib/axios/axios";
 
 const PagePengumuman = () => {
   const [listData, setListData] = useState<Pengumuman[]>([]);
@@ -14,7 +14,7 @@ const PagePengumuman = () => {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/api/pengumuman`);
+      const response = await apiClient.get(`/api/pengumuman`);
       console.log(response.data);
       setListData(response.data);
     } catch (error) {

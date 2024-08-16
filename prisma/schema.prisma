@@ -20,9 +20,9 @@ model User {
   name            String?    @db.VarChar(255)
   email           String     @db.VarChar(255) @unique
   image           String?    @db.VarChar(255)
-  image_name      String?    @db.VarChar(255)
-  password        String?    @db.VarChar(255)
-  role            String?    @db.VarChar(255)
+  image_name      String?   @db.VarChar(255)
+  password        String    @db.VarChar(255)
+  role            String    @db.VarChar(255)
   createdAt       DateTime  @default(now()) 
   updatedAt       DateTime  @updatedAt
   Pengumuman Pengumuman[]
@@ -31,9 +31,9 @@ model User {
 model Pengumuman {
   id          Int     @id @default(autoincrement())
   judul       String @db.VarChar(255)
-  text        String? @db.VarChar(255)
-  gambar      String? @db.VarChar(255)
-  url_gambar  String? @db.VarChar(255)
+  text        String @db.VarChar(255)
+  gambar      String @db.VarChar(255)
+  url_gambar  String @db.VarChar(255)
   user_id     Int
   createdAt  DateTime  @default(now()) 
   updatedAt  DateTime  @updatedAt
@@ -42,15 +42,15 @@ model Pengumuman {
 
 model Prodi {
   id                Int      @id @default(autoincrement())
-  nama              String?  @db.VarChar(255)
-  deskripsi         String?  @db.VarChar(255)
-  visi_misi         String?  @db.VarChar(255)
-  sejarah           String?  @db.VarChar(255)
-  info_lainnya      String?  @db.VarChar(255)
-  logo_prodi        String?  @db.VarChar(255)
-  url_logo_prodi    String?  @db.VarChar(255)
-  logo_universitas  String?  @db.VarChar(255)
-  url_logo_universitas String? @db.VarChar(255)
+  nama              String  @db.VarChar(255)
+  deskripsi         String  @db.VarChar(255)
+  visi_misi         String  @db.VarChar(255)
+  sejarah           String  @db.VarChar(255)
+  info_lainnya      String  @db.VarChar(255)
+  logo_prodi        String  @db.VarChar(255)
+  url_logo_prodi    String  @db.VarChar(255)
+  logo_universitas  String  @db.VarChar(255)
+  url_logo_universitas String @db.VarChar(255)
   createdAt  DateTime  @default(now()) 
   updatedAt  DateTime  @updatedAt
   Dosen             Dosen[]
@@ -59,12 +59,12 @@ model Prodi {
 
 model Dosen {
   id          Int     @id @default(autoincrement())
-  nama        String? @db.VarChar(255)
-  jabatan     String? @db.VarChar(255)
-  pendidikan  String? @db.VarChar(255)
+  nama        String @db.VarChar(255)
+  jabatan     String @db.VarChar(255)
+  pendidikan  String @db.VarChar(255)
   biografi    String? @db.VarChar(255)
-  publikasi   String? @db.VarChar(255)
-  kontak      String? @db.VarChar(255)
+  publikasi   String @db.VarChar(255)
+  kontak      String @db.VarChar(255)
   url_gambar  String? @db.VarChar(255)
   gambar      String? @db.VarChar(255)
   prodi_id    Int
@@ -76,10 +76,11 @@ model Dosen {
 
 model Class {
   id            Int        @id @default(autoincrement())
-  nama          String?    @db.VarChar(255)
-  sks           String?    @db.VarChar(255)
-  waktu_mulai   DateTime? 
-  waktu_selesai DateTime? 
+  nama          String    @db.VarChar(255)
+  sks           Int       
+  ruangan       String   
+  waktu_mulai   DateTime
+  waktu_selesai DateTime
   dosen_id      Int
   createdAt     DateTime  @default(now()) 
   updatedAt     DateTime  @updatedAt
@@ -90,12 +91,13 @@ model Class {
 
 model Mahasiswa {
   id               Int                 @id @default(autoincrement())
-  nama             String?             @db.VarChar(255)
-  nim              Int?
-  angkatan         String?             @db.VarChar(255)
+  nama             String              @db.VarChar(255)
+  nim              String              @unique
+  angkatan         String              @db.VarChar(255)
   createdAt        DateTime            @default(now()) 
   updatedAt        DateTime            @updatedAt
   Mahasiswa_has_class Mahasiswa_has_class[]
+  Absen         Absen[]
 }
 
 model Mahasiswa_has_class {
@@ -110,13 +112,17 @@ model Mahasiswa_has_class {
 }
 
 model Absen {
-  id        Int     @id @default(autoincrement())
-  kehadiran String? @db.VarChar(255)
-  tanggal   String? @db.VarChar(255)
-  class_id  Int
-  createdAt DateTime  @default(now()) 
-  updatedAt DateTime  @updatedAt
-  class     Class   @relation(fields: [class_id], references: [id])
+  id            Int     @id @default(autoincrement())
+  // kehadiran     String @db.VarChar(255)
+  // tanggal       String @db.VarChar(255)
+  class_id      Int
+  mahasiswa_id  Int
+  waktu_absen   DateTime   @default(now())
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt
+  class         Class     @relation(fields: [class_id], references: [id])
+
+  mahasiswa     Mahasiswa @relation(fields: [mahasiswa_id], references: [id])
 }
 
 model Kontak {

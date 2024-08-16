@@ -1,6 +1,6 @@
 import Modals from "@/app/components/ui/modals/Modals";
-import { Class, Dosen, Pengumuman } from "@prisma/client";
-import moment from "moment";
+import { Pengumuman } from "@prisma/client";
+
 import Image from "next/image";
 import React, { useState } from "react";
 import { IoEyeSharp } from "react-icons/io5";

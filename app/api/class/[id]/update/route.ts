@@ -4,19 +4,20 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function PUT(request: Request) {
-  const { id, nama, sks, waktu_mulai, waktu_selesai, dosen_id } =
+  const { id, nama, sks, waktu_mulai, waktu_selesai, dosen_id, ruangan } =
     await request.json();
   try {
-    console.log(id, nama, sks, waktu_mulai, waktu_selesai, dosen_id);
+    console.log(sks);
 
     const updatedClass = await prisma.class.update({
       where: { id },
       data: {
         nama,
-        sks,
+        sks: Number(sks),
         waktu_mulai,
         waktu_selesai,
         dosen_id,
+        ruangan,
       },
     });
     return NextResponse.json(updatedClass, { status: 200 });

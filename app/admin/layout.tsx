@@ -3,11 +3,11 @@ import Head from "next/head";
 import React, { useEffect } from "react";
 import Sidebar from "./sidebar";
 import Navbar from "./navbar";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+// import { useRouter } from "next/navigation";
+// import { useSession } from "next-auth/react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { push } = useRouter();
+  // const { push } = useRouter();
   // const { data: session, status } = useSession();
 
   // useEffect(() => {

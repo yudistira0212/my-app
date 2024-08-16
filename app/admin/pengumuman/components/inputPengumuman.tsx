@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import axios from "axios";
-
 import Image from "next/image";
 import { Dialog, Transition } from "@headlessui/react";
 import { uploadImage } from "@/app/lib/controllers/imageControllers";
 import { useSession } from "next-auth/react";
 import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
+import apiClient from "@/app/lib/axios/axios";
 
 interface PengumumanInputProps {
   onSuccess: () => void;
@@ -79,11 +78,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
     };
 
     try {
-      const response = await axios.post("/api/pengumuman", pengumumanData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.post("/api/pengumuman", pengumumanData);
 
       if (response.status === 201) {
         console.log("Pengumuman created successfully:", response.data);

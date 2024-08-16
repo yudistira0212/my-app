@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import { updateImage } from "@/app/lib/controllers/imageControllers";
 import ImageUpload from "@/app/components/common/image/ImageUpload";
 import Input from "@/app/components/common/input/Input";
 import Textarea from "@/app/components/common/textArea/Textarea";
 import Button from "@/app/components/common/button/Button";
+import apiClient from "@/app/lib/axios/axios";
 
 interface DashboardFormProps {
   isEdit: boolean;
@@ -93,47 +94,31 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
       }
 
       let response = null;
-      const cekData = await axios.get(`/api/prodi`);
+      const cekData = await apiClient.get(`/api/prodi`);
       if (cekData.data.length === 0) {
-        response = await axios.post(
-          `/api/prodi`,
-          {
-            nama: prodiData.namaProdi,
-            deskripsi: prodiData.deskripsi,
-            visi_misi: prodiData.visiMisi,
-            sejarah: prodiData.sejarah,
-            info_lainnya: prodiData.infoLainnya,
-            logo_prodi: logoProdiName,
-            url_logo_prodi: logoProdiURL,
-            logo_universitas: logoUniversitasName,
-            url_logo_universitas: logoUniversitasURL,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        response = await apiClient.post(`/api/prodi`, {
+          nama: prodiData.namaProdi,
+          deskripsi: prodiData.deskripsi,
+          visi_misi: prodiData.visiMisi,
+          sejarah: prodiData.sejarah,
+          info_lainnya: prodiData.infoLainnya,
+          logo_prodi: logoProdiName,
+          url_logo_prodi: logoProdiURL,
+          logo_universitas: logoUniversitasName,
+          url_logo_universitas: logoUniversitasURL,
+        });
       } else {
-        response = await axios.patch(
-          `/api/prodi/1`,
-          {
-            nama: prodiData.namaProdi,
-            deskripsi: prodiData.deskripsi,
-            visi_misi: prodiData.visiMisi,
-            sejarah: prodiData.sejarah,
-            info_lainnya: prodiData.infoLainnya,
-            logo_prodi: logoProdiName,
-            url_logo_prodi: logoProdiURL,
-            logo_universitas: logoUniversitasName,
-            url_logo_universitas: logoUniversitasURL,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        response = await apiClient.patch(`/api/prodi/1`, {
+          nama: prodiData.namaProdi,
+          deskripsi: prodiData.deskripsi,
+          visi_misi: prodiData.visiMisi,
+          sejarah: prodiData.sejarah,
+          info_lainnya: prodiData.infoLainnya,
+          logo_prodi: logoProdiName,
+          url_logo_prodi: logoProdiURL,
+          logo_universitas: logoUniversitasName,
+          url_logo_universitas: logoUniversitasURL,
+        });
       }
 
       if (response.status === 200 || response.status === 201) {

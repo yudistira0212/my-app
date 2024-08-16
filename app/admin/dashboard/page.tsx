@@ -6,6 +6,7 @@ import axios from "axios";
 import Loading from "@/app/components/common/loading/Loading";
 import DashboardHeader from "./components/DashboardHeader";
 import DashboardForm from "./components/DashboardForm";
+import apiClient from "@/app/lib/axios/axios";
 // import Loading from "@/components/common/loading/Loading";
 // import DashboardForm from "./components/DashboardForm";
 // import DashboardHeader from "./components/DashboardHeader";
@@ -34,7 +35,7 @@ const DashboardUtama = () => {
   const fetchProdi = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/prodi/1`);
+      const response = await apiClient.get(`/api/prodi/1`);
       const data = response.data;
       setProdiData({
         namaProdi: data.nama,

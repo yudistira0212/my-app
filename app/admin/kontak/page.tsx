@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
-import axios from "axios";
 import Loading from "@/app/components/common/loading/Loading";
 import KontakHeader from "./components/KontakHeader";
 import KontakForm from "./components/KontakForm";
+import apiClient from "@/app/lib/axios/axios";
 
 const PageKontak = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ const PageKontak = () => {
   const fetchKontak = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/kontak/1");
+      const res = await apiClient.get("/api/kontak/1");
       const data = res.data;
 
       setKontakData({

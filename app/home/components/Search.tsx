@@ -1,6 +1,29 @@
-import React from "react";
+"use client";
+
+import apiClient from "@/app/lib/axios/axios";
+import { Class } from "@prisma/client";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const Search = () => {
+  const [dataClass, setDataClass] = useState<Class[]>([]);
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const response = await apiClient.get("/api/class");
+      const data = response.data;
+      setDataClass(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+  };
+
+  const [search, setSearch] = useState("");
+
   return (
     <div>
       <div className="flex justify-center">
@@ -49,13 +72,14 @@ const Search = () => {
 
       <div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 my-6">
-          {Array.from({ length: 20 }).map((_, index) => (
-            <div
-              key={index}
-              className=" text-white p-4 rounded-lg flex items-center bg-[#495579] justify-center"
+          {dataClass.map((value, index) => (
+            <Link
+              key={value.id}
+              className="text-white p-4 rounded-lg hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
+              href={`/class/${value.id}`}
             >
-              <div>Nama Class</div>
-            </div>
+              <div>{value.nama}</div>
+            </Link>
           ))}
         </div>
       </div>

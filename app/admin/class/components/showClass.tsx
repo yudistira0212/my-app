@@ -36,6 +36,10 @@ const ShowClass: React.FC<Props> = ({ dataClass }) => {
             <p className=" col-span-1">:</p>
             <p className="col-span-4 w-full"> {dataClass.sks} </p>
 
+            <p className="col-span-1">Ruangan</p>
+            <p className=" col-span-1">:</p>
+            <p className="col-span-4 w-full"> {dataClass.ruangan} </p>
+
             <p className="col-span-1">Mulai</p>
             <p className="col-span-1">:</p>
             <p className="col-span-4 w-full">

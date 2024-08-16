@@ -21,7 +21,7 @@ const Profil = () => {
             berkontribusi pada konservasi dan menghasilkan lulusan yang berdaya
             saing serta berkarakter wirausaha.
           </p>
-          <p className="mb-4">
+          <div className="mb-4">
             <strong>Misi</strong>
             <ol className="list-decimal ml-5">
               <li>
@@ -45,8 +45,8 @@ const Profil = () => {
                 lingkungan.
               </li>
             </ol>
-          </p>
-          <p className="mb-4">
+          </div>
+          <div className="mb-4">
             <strong>Tujuan</strong>
             <ol className="list-decimal ml-5">
               <li>
@@ -64,7 +64,7 @@ const Profil = () => {
                 secara khusus dan Indonesia secara umum.
               </li>
             </ol>
-          </p>
+          </div>
         </div>
         <div>
           <h2 className="text-xl font-bold text-blue-900 mb-4">

@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { Class, Dosen } from "@prisma/client";
-import axios from "axios";
-import moment from "moment";
 import InputClass from "./components/inputClass";
 import ListClass from "./components/listClass";
+import apiClient from "@/app/lib/axios/axios";
 
 interface ClassWithDosen extends Class {
   dosen: Dosen;
@@ -19,7 +18,8 @@ const PageClass: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/class");
+      const response = await apiClient.get("/api/class");
+      console.log("Response data:", response.data); // Log response data
       setClasses(response.data);
     } catch (error) {
       console.error("Error fetching class:", error);
