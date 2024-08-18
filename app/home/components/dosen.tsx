@@ -1,41 +1,30 @@
 // components/FacultySlider.tsx
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-
-const facultyMembers = [
-  {
-    name: "CHRISTIAN DWI SUHERNDRA, S.T., M.Cs.",
-    position: "KAPRODI S1 INFORMATIKA",
-    imageUrl: "path/to/image1.jpg",
-  },
-  {
-    name: "LEON FERDINAND MARBUN, S.T., M.T.",
-    position: "KAPRODI D3 KOMPUTER",
-    imageUrl: "path/to/image2.jpg",
-  },
-  {
-    name: "RINTA LUTA, S.T., M.T.",
-    position: "KAJUR TEKNIK INFORMATIKA",
-    imageUrl: "path/to/image3.jpg",
-  },
-  {
-    name: "PROF. DEDI IRFAN, S.T., M.T., Ph.D",
-    position: "DOSEN DI FT",
-    imageUrl: "path/to/image4.jpg",
-  },
-  {
-    name: "FIKRULIN FADHLI KOM, M.Sc.",
-    position: "DOSEN",
-    imageUrl: "path/to/image5.jpg",
-  },
-];
+import { Dosen as DosenType } from "@prisma/client";
+import apiClient from "@/app/lib/axios/axios";
 
 const Dosen = () => {
+  const [dataDosen, setDataDosen] = useState<DosenType[]>([]);
+
+  useEffect(() => {
+    getDataDosen();
+  }, []);
+  const getDataDosen = async () => {
+    try {
+      const result = await apiClient.get("/api/dosen");
+      const data = result.data;
+      setDataDosen(data);
+      console.log({ data });
+    } catch (error) {
+      console.log("error get data dosen : ", error);
+    }
+  };
   return (
     <div className="w-full bg-blue-900 py-8">
       <h2 className="text-center text-white text-2xl font-bold mb-4">
@@ -56,20 +45,20 @@ const Dosen = () => {
           1536: { slidesPerView: 5 },
         }}
       >
-        {facultyMembers.map((member, index) => (
-          <SwiperSlide key={index} className="flex flex-col  ">
+        {dataDosen.map((value, index) => (
+          <SwiperSlide key={value.id} className="flex flex-col  ">
             <div className="w-full  flex justify-center">
               <div className="w-48 h-48 bg-white rounded-full  overflow-hidden mb-4">
                 <img
-                  src={member.imageUrl}
-                  alt={member.name}
+                  src={value.url_gambar ?? ""}
+                  alt={value.nama}
                   className="w-full h-full object-cover"
                 />
               </div>
             </div>
             <div className="text-center text-white">
-              <h3 className="font-bold">{member.name}</h3>
-              <p>{member.position}</p>
+              <h3 className="font-bold">{value.nama}</h3>
+              <p>{value.jabatan}</p>
             </div>
           </SwiperSlide>
         ))}

@@ -6,17 +6,17 @@ import { useState } from "react";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  // const { data: session, status } = useSession();
+  // const router = useRouter();
 
-  const handleSignOut = async () => {
-    await signOut(); // Panggil fungsi signOut untuk menghapus session
-    router.push("/login"); // Arahkan pengguna ke halaman login setelah logout
-  };
+  // const handleSignOut = async () => {
+  //   await signOut(); // Panggil fungsi signOut untuk menghapus session
+  //   router.push("/login"); // Arahkan pengguna ke halaman login setelah logout
+  // };
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
+  // if (status === "loading") {
+  //   return <p>Loading...</p>;
+  // }
 
   return (
     <nav className="bg-[#263159] text-white flex justify-between items-center p-4  shadow-inner">
@@ -30,7 +30,7 @@ const Navbar = () => {
           className="h-8 w-8 rounded-full cursor-pointer"
           onClick={() => setDropdownOpen(!dropdownOpen)}
         />
-        {dropdownOpen && (
+        {/* {dropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg py-2">
             <Link href="#" className="block px-4 py-2"></Link>
             <Link href="#" className="block px-4 py-2">
@@ -43,7 +43,7 @@ const Navbar = () => {
               Log Out
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </nav>
   );

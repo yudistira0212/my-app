@@ -1,9 +1,27 @@
 // components/ProdiProfile.tsx
 "use client";
 
-import React from "react";
+import apiClient from "@/app/lib/axios/axios";
+import { Prodi } from "@prisma/client";
+import React, { useEffect, useState } from "react";
 
 const Profil = () => {
+  const [dataProdi, setDataProdi] = useState<Prodi>();
+
+  useEffect(() => {
+    getDataProdi();
+  }, []);
+  const getDataProdi = async () => {
+    try {
+      const result = await apiClient.get("/api/prodi/1");
+      const data = result.data;
+      setDataProdi(data);
+      console.log({ data });
+    } catch (error) {
+      console.log("error get data prodi : ", error);
+    }
+  };
+
   return (
     <div className="bg-gray-50 p-8">
       <h1 className="text-center text-3xl font-bold mb-8 text-blue-900">
@@ -11,58 +29,35 @@ const Profil = () => {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-xl font-bold text-blue-900 mb-4">VISI MISI</h2>
+          <h2 className="text-xl font-bold text-blue-900 mb-4">
+            VISI MISI TUJUAN
+          </h2>
           <p className="mb-4">
             <strong>Visi</strong>
-            <br />
-            Pada tahun 2026 menjadi program studi yang unggul dan terpercaya di
-            tanah Papua dan Nasional yang mampu menghasilkan riset di bidang
-            sistem cerdas, manajemen informasi, dan jaringan komputer yang
-            berkontribusi pada konservasi dan menghasilkan lulusan yang berdaya
-            saing serta berkarakter wirausaha.
+            {dataProdi?.visi?.split("\n").map((line, index) => (
+              <p className=" text-justify " key={index}>
+                {line}
+              </p>
+            ))}
           </p>
           <div className="mb-4">
             <strong>Misi</strong>
             <ol className="list-decimal ml-5">
-              <li>
-                Untuk mendukung visi tersebut, misi yang diemban oleh program
-                studi S1 Teknik Informatika adalah:
-              </li>
-              <li>
-                Menyelenggarakan pendidikan dan pembelajaran yang berkualitas
-                sesuai dengan perkembangan IPTEK berlandaskan jiwa nasionalisme
-                dan wirausaha.
-              </li>
-              <li>
-                Melaksanakan penelitian secara inovatif dan mandiri yang
-                berwawasan konservasi yang mampu mendorong peningkatan publikasi
-                dan HKI.
-              </li>
-              <li>
-                Menyelenggarakan pengabdian pada masyarakat dengan
-                mengimplementasikan hasil penelitian untuk mendukung kemandirian
-                dan kesejahteraan masyarakat di tanah Papua dan kelestarian
-                lingkungan.
-              </li>
+              {dataProdi?.misi?.split("\n").map((line, index) => (
+                <li className="text-justify " key={index}>
+                  {line}
+                </li>
+              ))}
             </ol>
           </div>
           <div className="mb-4">
             <strong>Tujuan</strong>
             <ol className="list-decimal ml-5">
-              <li>
-                Menghasilkan lulusan yang dapat berkompetisi secara global dan
-                mampu berwawasan wirausaha.
-              </li>
-              <li>
-                Pengembangan kualitas penelitian dosen dan mahasiswa pada ranah
-                sistem cerdas, manajemen informasi, dan jaringan komputer yang
-                dapat disebarluaskan secara nasional dan internasional.
-              </li>
-              <li>
-                Pemberdayaan masyarakat di bidang teknologi informasi dan sistem
-                cerdas dalam upaya kesejahteraan masyarakat di tanah Papua
-                secara khusus dan Indonesia secara umum.
-              </li>
+              {dataProdi?.tujuan?.split("\n").map((line, index) => (
+                <li className="text-justify" key={index}>
+                  {line}
+                </li>
+              ))}
             </ol>
           </div>
         </div>
@@ -70,7 +65,12 @@ const Profil = () => {
           <h2 className="text-xl font-bold text-blue-900 mb-4">
             PROFIL SINGKAT TEKNIK INFORMATIKA
           </h2>
-          <p className="mb-4">
+          {dataProdi?.deskripsi?.split("\n").map((line, index) => (
+            <p className="mb-4 text-justify " key={index}>
+              {line}
+            </p>
+          ))}
+          {/* <p className="mb-4">
             Program studi Teknik Informatika adalah program pendidikan perguruan
             tinggi yang berfokus pada bidang teknologi informasi, dengan tujuan
             mengembangkan pengetahuan, ilmu, dan keahlian dalam sistem cerdas,
@@ -96,7 +96,7 @@ const Profil = () => {
             sehingga mampu memberikan kontribusi yang signifikan dalam
             perkembangan teknologi informasi untuk mendukung pembangunan
             nasional dan kesejahteraan masyarakat.
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

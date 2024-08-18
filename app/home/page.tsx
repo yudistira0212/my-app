@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Search from "./components/Search";
 
 import Pengumuman from "./components/Pengumuman";
 import Dosen from "./components/dosen";
@@ -10,6 +9,7 @@ import Footer from "@/app/components/client/footer/footer";
 
 import HomeHeader from "./components/HomeHeader";
 import Navbar from "@/app/components/client/header/Navbar";
+import Class from "./components/Class";
 
 const PageHome = () => {
   return (
@@ -22,7 +22,7 @@ const PageHome = () => {
       </div>
 
       <div className="m-4">
-        <Search />
+        <Class />
       </div>
       <div>
         <Pengumuman />

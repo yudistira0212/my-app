@@ -34,6 +34,7 @@ model Pengumuman {
   text        String @db.VarChar(255)
   gambar      String @db.VarChar(255)
   url_gambar  String @db.VarChar(255)
+  aktif       Boolean?
   user_id     Int
   createdAt  DateTime  @default(now()) 
   updatedAt  DateTime  @updatedAt
@@ -43,10 +44,12 @@ model Pengumuman {
 model Prodi {
   id                Int      @id @default(autoincrement())
   nama              String  @db.VarChar(255)
-  deskripsi         String  @db.VarChar(255)
-  visi_misi         String  @db.VarChar(255)
-  sejarah           String  @db.VarChar(255)
-  info_lainnya      String  @db.VarChar(255)
+  deskripsi         String  
+  visi              String?  
+  misi              String?  
+  tujuan            String?  
+  sejarah           String?  
+  info_lainnya      String?  
   logo_prodi        String  @db.VarChar(255)
   url_logo_prodi    String  @db.VarChar(255)
   logo_universitas  String  @db.VarChar(255)
@@ -59,12 +62,12 @@ model Prodi {
 
 model Dosen {
   id          Int     @id @default(autoincrement())
-  nama        String @db.VarChar(255)
-  jabatan     String @db.VarChar(255)
-  pendidikan  String @db.VarChar(255)
+  nama        String  @db.VarChar(255)
+  jabatan     String  @db.VarChar(255)
+  pendidikan  String  @db.VarChar(255)
   biografi    String? @db.VarChar(255)
-  publikasi   String @db.VarChar(255)
-  kontak      String @db.VarChar(255)
+  publikasi   String  @db.VarChar(255)
+  kontak      String  @db.VarChar(255)
   url_gambar  String? @db.VarChar(255)
   gambar      String? @db.VarChar(255)
   prodi_id    Int
@@ -113,8 +116,7 @@ model Mahasiswa_has_class {
 
 model Absen {
   id            Int     @id @default(autoincrement())
-  // kehadiran     String @db.VarChar(255)
-  // tanggal       String @db.VarChar(255)
+
   class_id      Int
   mahasiswa_id  Int
   waktu_absen   DateTime   @default(now())

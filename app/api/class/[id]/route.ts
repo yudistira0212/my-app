@@ -20,6 +20,7 @@ export async function GET(
         Mahasiswa_has_class: {
           include: { mahasiswa: true },
         },
+        Absen: true,
       },
     });
     if (classes) {

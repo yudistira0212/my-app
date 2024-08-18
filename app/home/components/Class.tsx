@@ -1,12 +1,12 @@
 "use client";
 
 import apiClient from "@/app/lib/axios/axios";
-import { Class } from "@prisma/client";
+import { Class as ClassType } from "@prisma/client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-const Search = () => {
-  const [dataClass, setDataClass] = useState<Class[]>([]);
+const Class = () => {
+  const [dataClass, setDataClass] = useState<ClassType[]>([]);
   useEffect(() => {
     getData();
   }, []);
@@ -25,7 +25,7 @@ const Search = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <div>
+    <div className=" h-screen">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold">Class Info</h1>
       </div>
@@ -87,4 +87,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default Class;

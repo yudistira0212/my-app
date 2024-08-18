@@ -15,7 +15,9 @@ interface DashboardFormProps {
   prodiData: {
     namaProdi: string;
     deskripsi: string;
-    visiMisi: string;
+    visi: string;
+    misi: string;
+    tujuan: string;
     sejarah: string;
     infoLainnya: string;
     logoProdiNama: string;
@@ -94,30 +96,29 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
       }
 
       let response = null;
+
+      const data = {
+        nama: prodiData.namaProdi,
+        deskripsi: prodiData.deskripsi,
+        visi: prodiData.visi,
+        misi: prodiData.misi,
+        tujuan: prodiData.tujuan,
+        sejarah: prodiData.sejarah,
+        info_lainnya: prodiData.infoLainnya,
+        logo_prodi: logoProdiName,
+        url_logo_prodi: logoProdiURL,
+        logo_universitas: logoUniversitasName,
+        url_logo_universitas: logoUniversitasURL,
+      };
+
       const cekData = await apiClient.get(`/api/prodi`);
       if (cekData.data.length === 0) {
         response = await apiClient.post(`/api/prodi`, {
-          nama: prodiData.namaProdi,
-          deskripsi: prodiData.deskripsi,
-          visi_misi: prodiData.visiMisi,
-          sejarah: prodiData.sejarah,
-          info_lainnya: prodiData.infoLainnya,
-          logo_prodi: logoProdiName,
-          url_logo_prodi: logoProdiURL,
-          logo_universitas: logoUniversitasName,
-          url_logo_universitas: logoUniversitasURL,
+          data,
         });
       } else {
         response = await apiClient.patch(`/api/prodi/1`, {
-          nama: prodiData.namaProdi,
-          deskripsi: prodiData.deskripsi,
-          visi_misi: prodiData.visiMisi,
-          sejarah: prodiData.sejarah,
-          info_lainnya: prodiData.infoLainnya,
-          logo_prodi: logoProdiName,
-          url_logo_prodi: logoProdiURL,
-          logo_universitas: logoUniversitasName,
-          url_logo_universitas: logoUniversitasURL,
+          data,
         });
       }
 
@@ -186,12 +187,28 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
       <div className="flex flex-col w-full bg-white p-4">
         <h1 className="text-2xl font-bold mb-6">Input Visi Misi</h1>
         <Textarea
-          id="visiMisi"
+          id="visi"
           isEdit={isEdit}
-          value={prodiData.visiMisi ?? ""}
-          placeholder="Visi Misi"
-          label="Visi Misi"
-          onChange={(value) => setProdiData({ ...prodiData, visiMisi: value })}
+          value={prodiData.visi ?? ""}
+          placeholder="Visi"
+          label="Visi"
+          onChange={(value) => setProdiData({ ...prodiData, visi: value })}
+        />
+        <Textarea
+          id="misi"
+          isEdit={isEdit}
+          value={prodiData.misi ?? ""}
+          placeholder="Misi"
+          label="Misi"
+          onChange={(value) => setProdiData({ ...prodiData, misi: value })}
+        />
+        <Textarea
+          id="tujuan"
+          isEdit={isEdit}
+          value={prodiData.tujuan ?? ""}
+          placeholder="Tujuan"
+          label="Tujuan"
+          onChange={(value) => setProdiData({ ...prodiData, tujuan: value })}
         />
         <Textarea
           id="sejarah"

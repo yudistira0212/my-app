@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import DosenInput from "./components/dosenInput";
 import TableDosen from "./components/tableDosen";
 import { Dosen } from "@prisma/client";
 import apiClient from "@/app/lib/axios/axios";
+import Loading from "./Loading";
 
 const PageDosen = () => {
   const [dosen, setDosenList] = useState<Dosen[]>([]);
@@ -33,7 +34,9 @@ const PageDosen = () => {
           <DosenInput onSuccess={getDosen} />
         </div>
         <div>
-          <TableDosen dosenList={dosen} fetchDosen={fetchDosen} />
+          <Suspense fallback={<Loading />}>
+            <TableDosen dosenList={dosen} fetchDosen={fetchDosen} />
+          </Suspense>
         </div>
       </div>
     </div>

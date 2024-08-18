@@ -1,35 +1,53 @@
-import React from "react";
+import apiClient from "@/app/lib/axios/axios";
+import { Kontak } from "@prisma/client";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { BsTelephoneFill } from "react-icons/bs";
+import { FaInstagramSquare } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 const Footer = () => {
+  const [dataKontak, setDataKontak] = useState<Kontak>();
+
+  useEffect(() => {
+    getDataKontak();
+  }, []);
+  const getDataKontak = async () => {
+    try {
+      const result = await apiClient.get("/api/kontak/1");
+      const data = result.data;
+      setDataKontak(data);
+      console.log(data);
+    } catch (error) {
+      console.log("error get data kontak : ", error);
+    }
+  };
+
   return (
     <div className="mt-8 text-center p-4 bg-[#A8A8A75E] h-[50vh]">
       <h3 className="text-xl font-bold text-blue-900 mb-4">
         TERHUBUNG DENGAN KAMI :
       </h3>
-      <div className="flex justify-center h-48  space-x-8">
-        <div className="flex items-center">
-          <img
-            src="/path/to/phone-icon.png"
-            alt="Phone"
-            className="w-6 h-6 mr-2"
-          />
-          <span>(0986) 214245</span>
+      <div className="flex justify-center h-1/2 space-x-8">
+        <div className="flex items-center gap-1 justify-center">
+          <BsTelephoneFill size={20} />
+          <p className="font-bold text-xl">{dataKontak?.telephone}</p>
+          {/* <p>{dataKontak?.alamat}</p> */}
         </div>
-        <div className="flex items-center">
-          <img
-            src="/path/to/email-icon.png"
-            alt="Email"
-            className="w-6 h-6 mr-2"
-          />
-          <span>prodi.s1informatika@unipa.ac.id</span>
+        <div className="flex items-center gap-1 justify-center">
+          <MdEmail size={20} />
+          <Link
+            className="font-bold text-xl"
+            href={`mailto:${dataKontak?.email}`}
+          >
+            {dataKontak?.email}
+          </Link>
         </div>
-        <div className="flex items-center">
-          <img
-            src="/path/to/instagram-icon.png"
-            alt="Instagram"
-            className="w-6 h-6 mr-2"
-          />
-          <span>@teknik_informatika_unipa</span>
+        <div className="flex items-center gap-1 justify-center">
+          <FaInstagramSquare size={20} />
+          <Link href={"#"} className="font-bold text-xl">
+            {dataKontak?.sosial_media}
+          </Link>
         </div>
       </div>
     </div>

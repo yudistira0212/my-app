@@ -19,7 +19,9 @@ const DashboardUtama = () => {
   const [prodiData, setProdiData] = useState({
     namaProdi: "",
     deskripsi: "",
-    visiMisi: "",
+    visi: "",
+    misi: "",
+    tujuan: "",
     sejarah: "",
     infoLainnya: "",
     logoProdiNama: "",
@@ -40,7 +42,9 @@ const DashboardUtama = () => {
       setProdiData({
         namaProdi: data.nama,
         deskripsi: data.deskripsi,
-        visiMisi: data.visi_misi,
+        visi: data.visi,
+        misi: data.misi,
+        tujuan: data.tujuan,
         sejarah: data.sejarah,
         infoLainnya: data.info_lainnya,
         logoProdiNama: data.logo_prodi,

@@ -28,7 +28,9 @@ export async function POST(request: Request) {
       data: {
         nama: body.nama,
         deskripsi: body.deskripsi,
-        visi_misi: body.visi_misi,
+        visi: body.visi,
+        misi: body.misi,
+        tujuan: body.visi,
         sejarah: body.sejarah,
         info_lainnya: body.info_lainnya,
         logo_prodi: body.logo_prodi,

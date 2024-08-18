@@ -8,14 +8,13 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    console.log("Fetching classes..."); // Tambahkan log
     const classes = await prisma.class.findMany({
       include: { dosen: true },
     });
-    console.log("Classes fetched:", classes); // Tambahkan log hasil query
+
     return NextResponse.json(classes, { status: 200 });
   } catch (error: Error | any) {
-    console.error("Error fetching classes:", error); // Log error
+    console.error("Error fetching classes:", error);
     return NextResponse.json(
       { error: "Failed to fetch classes", details: error.message },
       { status: 500 }
