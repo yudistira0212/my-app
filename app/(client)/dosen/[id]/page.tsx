@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import ImageComponent from "./components/Image";
 import { Dosen } from "@prisma/client";
-import apiClient from "../../lib/axios/axios";
+import apiClient from "../../../lib/axios/axios";
 import { useParams } from "next/navigation";
 import Pendidikan from "./components/Pendidikan";
 

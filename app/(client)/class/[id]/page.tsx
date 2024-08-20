@@ -14,7 +14,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import Absen from "./components/Absen";
 
 import Class from "./components/Class";
-import Loading from "@/app/home/Loading";
+import Loading from "@/app/(client)/home/Loading";
 
 interface ClassWithRelations extends ClassType {
   dosen: Dosen; // Relation to Dosen

@@ -7,6 +7,8 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json", // Set header default
   },
+
+  // adapter: cache.adapter({ maxAge: 15 * 60 * 1000 }),
 });
 
 // Tambahkan interceptor untuk request
