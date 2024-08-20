@@ -122,18 +122,13 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
         });
       }
 
-      if (response.status === 200 || response.status === 201) {
-        fetchProdi();
-        setError("");
-        toast.success("Data berhasil disimpan!");
+      toast.success("Prodi successfully saved.");
+    } catch (error: any) {
+      if (error.response) {
+        toast.error(error.response.data.error);
       } else {
-        setError("Failed to save data.");
-        toast.error("Gagal menyimpan data.");
+        toast.error(error);
       }
-    } catch (error) {
-      console.error("Terjadi kesalahan:", error);
-      setError("An error occurred during submission.");
-      toast.error("Terjadi kesalahan saat menyimpan data.");
     } finally {
       setLoading(false);
       setSubmitting(false);

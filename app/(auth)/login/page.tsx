@@ -3,14 +3,18 @@ import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Loading from "@/app/components/common/loading/Loading";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { push } = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const result = await signIn("credentials", {
       // redirect: false,
       email,
@@ -20,11 +24,15 @@ const LoginPage = () => {
     });
 
     if (result?.error) {
+      setLoading(false);
       // Handle error here (e.g., show error message)
       console.error(result.error);
+      toast.error(result.error);
     } else {
+      toast.success("Login success");
       // Redirect to the desired page after successful login
-      push("/admin/utama");
+      setLoading(false);
+      push("/admin/dashboard");
     }
   };
 
@@ -76,9 +84,10 @@ const LoginPage = () => {
           <div className="flex items-center justify-center mt-4">
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              disabled={loading}
+              className="text-white flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              masuk
+              {loading ? <Loading /> : "Login"}
             </button>
           </div>
         </form>

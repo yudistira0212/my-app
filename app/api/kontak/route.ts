@@ -36,9 +36,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(updateKontak, { status: 201 });
   } catch (error) {
-    console.error("Error updating Prodi:", error);
+    console.error("Error updating kontak:", error);
     return NextResponse.json(
-      { message: "Failed to update Prodi" },
+      { message: "Failed to update kontak" },
       { status: 500 }
     );
   }

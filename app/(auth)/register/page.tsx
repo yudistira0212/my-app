@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -11,29 +13,35 @@ const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    setLoading(true);
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
     try {
-      const response = await axios.post("/api/auth/register", {
+      const response = await apiClient.post("/api/auth/register", {
         email: email,
         password: password,
         nama: username,
       });
 
       if (response.status === 201) {
+        toast.success("Registrasi Berhasil");
+        setLoading(false);
         router.push("/login");
       } else {
         setError(response.data.message || "An error occurred");
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
       setError("An error occurred");
     }
   };
@@ -121,7 +129,8 @@ const RegisterPage = () => {
           <div className="flex items-center justify-center mt-4">
             <button
               type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              disabled={loading}
+              className="text-white disabled:bg-opacity-50 bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Daftar
             </button>

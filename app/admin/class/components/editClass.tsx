@@ -8,6 +8,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
+import { toast } from "react-toastify";
 
 interface editProps {
   id: number;
@@ -36,8 +37,12 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
     try {
       const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
-    } catch (error) {
-      console.error("Error fetching dosen data:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -59,8 +64,12 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
         dosen_id: data.dosen_id.toString(),
         ruangan: data.ruangan,
       });
-    } catch (error) {
-      console.error("Error fetching class data:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -97,29 +106,32 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
     try {
       const response = await apiClient.put(`/api/class/${id}/update`, payload);
 
-      if (response.status === 200) {
-        console.log("updated successfully:", response.data);
-        alert("updated successfully!");
-        setUploading(false);
-        setModalIsOpen(false);
-
-        // Reset form after submission
-        setFormData({
-          id: 0,
-          nama: "",
-          sks: 0,
-          waktu_mulai: "",
-          waktu_selesai: "",
-          dosen_id: "",
-          ruangan: "",
-        });
-
-        onSuccess();
-      }
-    } catch (error) {
+      console.log("updated successfully:", response.data);
       setUploading(false);
-      console.error("Error creating/updating class:", error);
-      alert("Error creating/updating class");
+      setModalIsOpen(false);
+
+      // Reset form after submission
+      setFormData({
+        id: 0,
+        nama: "",
+        sks: 0,
+        waktu_mulai: "",
+        waktu_selesai: "",
+        dosen_id: "",
+        ruangan: "",
+      });
+
+      toast.success("Class updated successfully");
+
+      onSuccess();
+    } catch (error: any) {
+      setUploading(false);
+
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error);
+      }
     }
   };
 

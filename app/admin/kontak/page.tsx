@@ -34,9 +34,12 @@ const PageKontak = () => {
         sosialMedia: data.sosial_media,
       });
       setError("");
-    } catch (error) {
-      console.error("Error fetching kontak:", error);
-      setError("Failed to fetch kontak data.");
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     } finally {
       setLoading(false);
     }
@@ -45,7 +48,9 @@ const PageKontak = () => {
   return (
     <div className="flex flex-col bg-white p-4">
       {loading ? (
-        <Loading />
+        <div className="flex justify-center items-center w-full h-screen ">
+          <Loading />
+        </div>
       ) : (
         <>
           <KontakHeader isEdit={isEdit} setIsEdit={setIsEdit} />

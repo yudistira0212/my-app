@@ -22,8 +22,12 @@ const PageDosen = () => {
     try {
       const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
-    } catch (error) {
-      console.error("Error fetching dosen data:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
   return (

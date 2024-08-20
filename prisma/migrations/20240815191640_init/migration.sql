@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Class" ALTER COLUMN "ruangan" DROP DEFAULT,
-ALTER COLUMN "ruangan" SET DATA TYPE TEXT;

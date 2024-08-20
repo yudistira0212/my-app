@@ -17,8 +17,12 @@ const PagePengumuman = () => {
       const response = await apiClient.get(`/api/pengumuman`);
       console.log(response.data);
       setListData(response.data);
-    } catch (error) {
-      console.log("filed fetch data", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
 

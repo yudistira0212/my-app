@@ -7,6 +7,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { useState } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
+import { toast } from "react-toastify";
 
 interface DeleteClassProps {
   id: number;
@@ -25,9 +26,13 @@ const DeleteClass: React.FC<DeleteClassProps> = ({ id, onSuccess }) => {
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);
-    } catch (error) {
+      toast.success("Class deleted successfully");
+    } catch (error: any) {
       console.error("Error deleting class:", error);
       setErrorMessage("Error deleting class");
+      if (error.response) {
+        toast.error(error.response.data.error);
+      }
     } finally {
       setIsLoading(false);
     }

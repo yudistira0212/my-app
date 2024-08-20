@@ -8,6 +8,7 @@ import { uploadImage } from "@/app/lib/controllers/imageControllers";
 import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface inputDosenProps {
   onSuccess: () => void;
@@ -75,26 +76,26 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     };
 
     try {
-      const response = await apiClient.post("/api/dosen", dosenData);
+      await apiClient.post("/api/dosen", dosenData);
+      // Reset form fields
+      setNama("");
+      setJabatan("");
+      setPendidikan("");
+      setPublikasi("");
+      setContact("");
 
-      if (response.status === 201) {
-        console.log("Dosen created successfully:", response.data);
-        // Reset form fields
-        setNama("");
-        setJabatan("");
-        setPendidikan("");
-        setPublikasi("");
-        setContact("");
+      setSelectedFile(null);
+      setPreviewURL(null);
+      setModalIsOpen(false);
+      onSuccess();
 
-        setSelectedFile(null);
-        setPreviewURL(null);
-        setModalIsOpen(false);
-        onSuccess();
+      toast.success("Dosen created successfully");
+    } catch (error: any) {
+      if (error.response) {
+        toast.error(error.response.data.error);
       } else {
-        console.error("Failed to create dosen");
+        toast.error(error);
       }
-    } catch (error) {
-      console.error("Error creating dosen:", error);
     }
   };
 
@@ -124,7 +125,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                   <Image
                     src={previewURL}
                     alt="Preview"
-                    className=" bg-gray-200 rounded-lg mb-2"
+                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
                     width={200}
                     height={200}
@@ -132,10 +133,11 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                 </div>
               ) : (
                 <div className="">
-                  <img
+                  <Image
                     alt="Preview"
+                    src={""}
                     onClick={handleImageClick}
-                    className=" bg-gray-200 rounded-lg mb-2"
+                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}
                     height={200}
                   />
@@ -145,7 +147,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
                 hidden
               />
             </div>
@@ -155,7 +157,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                 type="text"
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-3">
@@ -164,7 +166,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                 type="text"
                 value={jabatan}
                 onChange={(e) => setJabatan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className="  col-span-2">
@@ -172,7 +174,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
               <textarea
                 value={pendidikan}
                 onChange={(e) => setPendidikan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-2">
@@ -180,7 +182,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
               <textarea
                 value={publikasi}
                 onChange={(e) => setPublikasi(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-2">
@@ -189,7 +191,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
                 type="email"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
           </div>

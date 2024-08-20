@@ -23,6 +23,8 @@ export async function GET() {
 export async function POST(request: Request) {
   const { judul, text, gambar, url_gambar, user_id } = await request.json();
 
+  console.log({ judul, text, gambar, url_gambar, user_id });
+
   // Validate required fields
   if (!judul || !text || !gambar) {
     return NextResponse.json(
@@ -39,6 +41,7 @@ export async function POST(request: Request) {
         gambar,
         url_gambar,
         user_id,
+        aktif: true,
       },
     });
 

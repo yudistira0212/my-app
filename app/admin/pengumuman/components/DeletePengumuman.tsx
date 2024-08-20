@@ -6,6 +6,7 @@ import { deleteImage } from "@/app/lib/controllers/imageControllers";
 import { FaTrashAlt } from "react-icons/fa";
 import Confirm from "@/app/components/ui/modals/Confirm";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface DeletePengumumanProps {
   id: number;
@@ -39,9 +40,14 @@ const DeletePengumuman: React.FC<DeletePengumumanProps> = ({
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);
-    } catch (error) {
-      console.error("Error deleting pengumuman:", error);
+      toast.success("Pengumuman deleted successfully");
+    } catch (error: any) {
       setErrorMessage("Failed to delete pengumuman.");
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error);
+      }
     } finally {
       setIsLoading(false);
     }

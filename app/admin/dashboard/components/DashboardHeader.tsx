@@ -7,12 +7,9 @@ import { FaLock, FaLockOpen } from "react-icons/fa";
 
 const DashboardHeader = ({ isEdit, setIsEdit, title }: any) => {
   return (
-    <div className="flex gap-1 items-center mb-4">
+    <div className="flex gap-1 items-center mb-4 ">
       <Judul text={title} level={1} />
-      <label
-        htmlFor="isEdit"
-        className="inline-flex items-center cursor-pointer"
-      >
+      <label htmlFor="isEdit" className=" cursor-pointer">
         <input
           checked={isEdit}
           onChange={(e) => setIsEdit(e.target.checked)}

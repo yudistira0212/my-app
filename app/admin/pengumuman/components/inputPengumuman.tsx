@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface PengumumanInputProps {
   onSuccess: () => void;
@@ -80,22 +81,22 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
     try {
       const response = await apiClient.post("/api/pengumuman", pengumumanData);
 
-      if (response.status === 201) {
-        console.log("Pengumuman created successfully:", response.data);
-        // Reset form fields
-        setJudul("");
-        setText("");
-        setGambar("");
-        setUrlGambar(null);
-        setSelectedFile(null);
-        setPreviewURL(null);
-        setModalIsOpen(false);
-        onSuccess();
+      // Reset form fields
+      setJudul("");
+      setText("");
+      setGambar("");
+      setUrlGambar(null);
+      setSelectedFile(null);
+      setPreviewURL(null);
+      setModalIsOpen(false);
+      onSuccess();
+      toast.success("Pengumuman created successfully");
+    } catch (error: any) {
+      if (error.response) {
+        toast.error(error.response.data.error);
       } else {
-        console.error("Failed to create pengumuman");
+        toast.error(error);
       }
-    } catch (error) {
-      console.error("Error creating pengumuman:", error);
     } finally {
       setUploading(false);
     }
@@ -127,7 +128,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
                   <Image
                     src={previewURL}
                     alt="Preview"
-                    className="bg-gray-200 rounded-lg mb-2"
+                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
                     width={200}
                     height={200}
@@ -135,10 +136,11 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
                 </div>
               ) : (
                 <div className="">
-                  <img
+                  <Image
                     alt="Preview"
+                    src={""}
                     onClick={handleImageClick}
-                    className="bg-gray-200 rounded-lg mb-2"
+                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}
                     height={200}
                   />
@@ -148,7 +150,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
                 hidden
               />
             </div>
@@ -158,7 +160,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
                 type="text"
                 value={judul}
                 onChange={(e) => setJudul(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
             <div className="col-span-3">
@@ -166,7 +168,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-24"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-24"
               />
             </div>
           </div>

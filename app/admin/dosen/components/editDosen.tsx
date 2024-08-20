@@ -8,6 +8,7 @@ import { updateImage } from "@/app/lib/controllers/imageControllers";
 import { FaEdit } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface EditProps {
   // show: boolean;
@@ -49,7 +50,11 @@ const EditDosen: React.FC<EditProps> = ({
         // setUrlGambarLama(dosen.url_gambar);
       })
       .catch((error) => {
-        console.error("Error fetching dosen data:", error);
+        if (error.response) {
+          console.error(error.response.data.error);
+        } else {
+          console.error(error);
+        }
       });
   };
 
@@ -99,23 +104,19 @@ const EditDosen: React.FC<EditProps> = ({
     };
 
     try {
-      const response = await apiClient.put(
-        `/api/dosen/${id}/update`,
-        dosenData
-      );
-
-      if (response.status === 200) {
-        setUploading(false);
-        onSuccess();
-        console.log("Dosen updated successfully:", response.data);
-        setModalIsOpen(false); // Navigate back to the dosen list page
-      } else {
-        setUploading(false);
-        console.error("Failed to update dosen");
-      }
-    } catch (error) {
+      await apiClient.put(`/api/dosen/${id}/update`, dosenData);
       setUploading(false);
-      console.error("Error updating dosen:", error);
+      onSuccess();
+
+      setModalIsOpen(false);
+      toast.success("Dosen updated successfully");
+    } catch (error: any) {
+      setUploading(false);
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error);
+      }
     }
   };
 
@@ -148,7 +149,7 @@ const EditDosen: React.FC<EditProps> = ({
                   <Image
                     src={previewURL}
                     alt="Preview"
-                    className=" bg-gray-200 rounded-lg mb-2"
+                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
                     width={200}
                     height={200}
@@ -156,10 +157,11 @@ const EditDosen: React.FC<EditProps> = ({
                 </div>
               ) : (
                 <div className="">
-                  <img
+                  <Image
                     alt="Preview"
+                    src={""}
                     onClick={handleImageClick}
-                    className=" bg-gray-200 rounded-lg mb-2"
+                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}
                     height={200}
                   />
@@ -169,7 +171,7 @@ const EditDosen: React.FC<EditProps> = ({
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
                 hidden
               />
             </div>
@@ -179,7 +181,7 @@ const EditDosen: React.FC<EditProps> = ({
                 type="text"
                 value={nama}
                 onChange={(e) => setNama(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-3">
@@ -188,7 +190,7 @@ const EditDosen: React.FC<EditProps> = ({
                 type="text"
                 value={jabatan}
                 onChange={(e) => setJabatan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className="  col-span-2">
@@ -196,7 +198,7 @@ const EditDosen: React.FC<EditProps> = ({
               <textarea
                 value={pendidikan}
                 onChange={(e) => setPendidikan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-2">
@@ -204,7 +206,7 @@ const EditDosen: React.FC<EditProps> = ({
               <textarea
                 value={publikasi}
                 onChange={(e) => setPublikasi(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
             <div className=" col-span-2">
@@ -213,7 +215,7 @@ const EditDosen: React.FC<EditProps> = ({
                 type="email"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12 "
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
           </div>

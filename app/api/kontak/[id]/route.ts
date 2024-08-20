@@ -9,6 +9,13 @@ export async function PATCH(req: NextRequest, { params }: any) {
 
   console.log(body);
 
+  const kontak = await prisma.kontak.findUnique({
+    where: { id: Number(id) },
+  });
+  if (!kontak) {
+    return NextResponse.json({ error: "kontak not found" }, { status: 404 });
+  }
+
   try {
     const updateKontak = await prisma.kontak.update({
       where: { id: Number(id) },

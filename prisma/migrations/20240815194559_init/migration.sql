@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Class" ALTER COLUMN "sks" DROP DEFAULT;

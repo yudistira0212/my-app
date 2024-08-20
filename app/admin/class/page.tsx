@@ -21,8 +21,12 @@ const PageClass: React.FC = () => {
       const response = await apiClient.get("/api/class");
       console.log("Response data:", response.data); // Log response data
       setClasses(response.data);
-    } catch (error) {
-      console.error("Error fetching class:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
 

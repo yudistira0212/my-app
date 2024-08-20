@@ -33,7 +33,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Database error: ", error); // Log error for debugging
     return NextResponse.json(
-      { error: "Failed to delete classes" },
+      { error: "Failed to delete class" },
       { status: 500 }
     );
   }

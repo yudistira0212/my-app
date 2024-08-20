@@ -26,17 +26,17 @@ export async function POST(request: Request) {
   try {
     const updatedProdi = await prisma.prodi.create({
       data: {
-        nama: body.nama,
-        deskripsi: body.deskripsi,
-        visi: body.visi,
-        misi: body.misi,
-        tujuan: body.visi,
-        sejarah: body.sejarah,
-        info_lainnya: body.info_lainnya,
-        logo_prodi: body.logo_prodi,
-        url_logo_prodi: body.url_logo_prodi,
-        logo_universitas: body.logo_universitas,
-        url_logo_universitas: body.url_logo_universitas,
+        nama: body.data.nama,
+        deskripsi: body.data.deskripsi,
+        visi: body.data.visi,
+        misi: body.data.misi,
+        tujuan: body.data.tujuan,
+        sejarah: body.data.sejarah,
+        info_lainnya: body.data.info_lainnya,
+        logo_prodi: body.data.logo_prodi,
+        url_logo_prodi: body.data.url_logo_prodi,
+        logo_universitas: body.data.logo_universitas,
+        url_logo_universitas: body.data.url_logo_universitas,
       },
     });
 

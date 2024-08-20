@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface inputProps {
   onSuccess: () => void;
@@ -34,8 +35,12 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
     try {
       const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
-    } catch (error) {
-      console.error("Error fetching dosen data:", error);
+    } catch (error: any) {
+      if (error.response) {
+        console.error(error.response.data.error);
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -65,25 +70,22 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
     try {
       const response = await apiClient.post("/api/class", payload); // Menggunakan apiClient
 
-      if (response.status === 201) {
-        console.log("Class created successfully:", response.data);
+      setUploading(false);
+      onSuccess();
+      setModalIsOpen(false);
 
-        alert("Class created successfully!");
-        setUploading(false);
-        onSuccess();
-        setModalIsOpen(false);
+      // Reset form setelah submit
+      setFormData({
+        nama: "",
+        sks: 0,
+        waktu_mulai: "",
+        waktu_selesai: "",
+        dosen_id: "",
+        ruangan: "",
+      });
 
-        // Reset form setelah submit
-        setFormData({
-          nama: "",
-          sks: 0,
-          waktu_mulai: "",
-          waktu_selesai: "",
-          dosen_id: "",
-          ruangan: "",
-        });
-      }
-    } catch (error) {
+      toast.success("Class created successfully");
+    } catch (error: any) {
       setUploading(false);
       console.error("Error creating class:", error);
       alert("Error creating class");
@@ -120,7 +122,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.nama}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -138,7 +140,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.sks}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -156,7 +158,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.waktu_mulai}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -174,7 +176,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.waktu_selesai}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
             <div className="mb-4">
@@ -191,7 +193,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.ruangan}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
 
@@ -208,7 +210,7 @@ const InputClass: React.FC<inputProps> = ({ onSuccess }) => {
                 value={formData.dosen_id}
                 onChange={handleChange}
                 required
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               >
                 <option value="">Select a Dosen</option>
                 {dosenList.map((dosen) => (

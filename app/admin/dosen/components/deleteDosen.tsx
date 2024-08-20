@@ -5,6 +5,7 @@ import { deleteImage } from "@/app/lib/controllers/imageControllers";
 import { FaTrashAlt } from "react-icons/fa";
 import Confirm from "@/app/components/ui/modals/Confirm";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface deleteDosenProps {
   id: number;
@@ -34,8 +35,13 @@ const DeleteDosen: React.FC<deleteDosenProps> = ({ id, image, onSuccess }) => {
       onSuccess();
       setIsLoading(false);
       setIsOpen(false);
-    } catch (error) {
-      console.error("Error deleting dosen:", error);
+      toast.success("Dosen deleted successfully");
+    } catch (error: any) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error);
+      }
     } finally {
       setIsLoading(false);
     }

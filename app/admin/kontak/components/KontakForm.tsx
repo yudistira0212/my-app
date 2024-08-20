@@ -54,17 +54,14 @@ const KontakForm: React.FC<KontakFormProps> = ({
         response = await apiClient.patch(`/api/kontak/1`, data);
       }
 
-      if (response.status === 200 || response.status === 201) {
-        fetchKontak();
-        toast.success("Data berhasil disimpan!");
+      fetchKontak();
+      toast.success("Kontak successfully saved.");
+    } catch (error: any) {
+      if (error.response) {
+        toast.error(error.response.data.error);
       } else {
-        setError("Failed to save data.");
-        toast.error("Gagal menyimpan data.");
+        toast.error(error);
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("An error occurred during submission.");
-      toast.error("Terjadi kesalahan saat menyimpan data.");
     } finally {
       setFormLoading(false);
       setLoading(false);

@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { FaEdit } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
+import { toast } from "react-toastify";
 
 interface EditProps {
   id: number;
@@ -38,7 +39,11 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
         setGambarLama(pengumuman.gambar);
       })
       .catch((error) => {
-        console.error("Error fetching pengumuman data:", error);
+        if (error.response) {
+          console.error(error.response.data.error);
+        } else {
+          console.error(error);
+        }
       });
   };
 
@@ -93,18 +98,19 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
         pengumumanData
       );
 
-      if (response.status === 200) {
-        setUploading(false);
-        onSuccess();
-        console.log("Pengumuman updated successfully:", response.data);
-        setModalIsOpen(false);
-      } else {
-        setUploading(false);
-        console.error("Failed to update pengumuman");
-      }
-    } catch (error) {
       setUploading(false);
-      console.error("Error updating pengumuman:", error);
+      onSuccess();
+
+      setModalIsOpen(false);
+
+      toast.success("Pengumuman updated successfully");
+    } catch (error: any) {
+      setUploading(false);
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error(error);
+      }
     }
   };
 
@@ -137,7 +143,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
                   <Image
                     src={previewURL}
                     alt="Preview"
-                    className="bg-gray-200 rounded-lg mb-2"
+                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
                     width={200}
                     height={200}
@@ -145,10 +151,11 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
                 </div>
               ) : (
                 <div>
-                  <img
+                  <Image
                     alt="Preview"
+                    src={""}
                     onClick={handleImageClick}
-                    className="bg-gray-200 rounded-lg mb-2"
+                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}
                     height={200}
                   />
@@ -158,7 +165,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
                 hidden
               />
             </div>
@@ -168,7 +175,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
                 type="text"
                 value={judul}
                 onChange={(e) => setJudul(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-12"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               />
             </div>
             <div className="col-span-4">
@@ -176,7 +183,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 w-full h-24"
+                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-24"
               />
             </div>
           </div>
