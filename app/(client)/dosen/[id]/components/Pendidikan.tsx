@@ -8,10 +8,10 @@ const Pendidikan: React.FC<Props> = ({ dataPendidikan }) => {
   return (
     <>
       <div className="text-left">
-        <h4 className="text-lg font-bold mb-2">Pendidikan</h4>
+        <h4 className="text-lg  font-bold mb-2">Pendidikan</h4>
         <ul className="list-disc list-inside mb-4">
-          {pendikans.map((value) => (
-            <li>{value}</li>
+          {pendikans.map((value, index) => (
+            <li key={index}>{value}</li>
           ))}
         </ul>
       </div>

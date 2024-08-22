@@ -14,7 +14,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import Absen from "./components/Absen";
 
 import Class from "./components/Class";
-import Loading from "@/app/(client)/home/Loading";
 
 interface ClassWithRelations extends ClassType {
   dosen: Dosen; // Relation to Dosen
@@ -28,9 +27,9 @@ const PageClass: React.FC = () => {
   const id = useParams().id;
 
   useEffect(() => {
-    fetchData();
-  }, []);
-  const fetchData = async () => {
+    fetchData(id);
+  }, [id]);
+  const fetchData = async (id: any) => {
     try {
       const result = await apiClient.get(`/api/class/${id}`);
       const data = result.data;
@@ -45,10 +44,7 @@ const PageClass: React.FC = () => {
   return (
     <div>
       <div className="bg-gray-50 min-h-screen flex flex-col items-center justify-between">
-        <Suspense fallback={<Loading}>
-        
         {dataClass && <Class dataClass={dataClass} />}
-        </Suspense>
 
         <div className="w-full">
           <Image

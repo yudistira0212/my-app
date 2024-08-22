@@ -15,9 +15,6 @@ const PageHome = () => {
   return (
     <div>
       <div>
-        <Navbar />
-      </div>
-      <div>
         <HomeHeader />
       </div>
 
@@ -32,9 +29,6 @@ const PageHome = () => {
       </div>
       <div>
         <Profil />
-      </div>
-      <div>
-        <Footer />
       </div>
     </div>
   );

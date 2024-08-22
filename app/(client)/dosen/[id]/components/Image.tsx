@@ -11,9 +11,9 @@ const ImageComponent: React.FC<Props> = ({ src, alt }) => {
       <Image
         src={src}
         alt={alt}
-        width={200}
-        height={200}
-        className="rounded-full mb-4"
+        width={300}
+        height={300}
+        className="rounded-full"
       />
     </div>
   );

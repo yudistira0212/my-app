@@ -20,6 +20,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
   const [pendidikan, setPendidikan] = useState("");
   const [publikasi, setPublikasi] = useState("");
   const [contact, setContact] = useState("");
+  const [biografi, setBiografi] = useState("");
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
@@ -72,6 +73,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
       kontak: contact,
       url_gambar,
       gambar,
+      biografi,
       prodi_id: 1, // Update with the actual prodi_id
     };
 
@@ -83,6 +85,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
       setPendidikan("");
       setPublikasi("");
       setContact("");
+      setBiografi("");
 
       setSelectedFile(null);
       setPreviewURL(null);
@@ -182,6 +185,14 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
               <textarea
                 value={publikasi}
                 onChange={(e) => setPublikasi(e.target.value)}
+                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
+              />
+            </div>
+            <div className=" col-span-2">
+              <label className=" text-gray-700">Biografi</label>
+              <textarea
+                value={biografi}
+                onChange={(e) => setBiografi(e.target.value)}
                 className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
               />
             </div>
