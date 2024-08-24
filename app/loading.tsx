@@ -3,7 +3,7 @@ import Loading from "./components/common/loading/Loading";
 
 const loading = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center h-screen">
       <Loading text="Loading..." />
     </div>
   );

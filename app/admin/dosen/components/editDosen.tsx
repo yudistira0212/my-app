@@ -9,6 +9,7 @@ import { FaEdit } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
 import { toast } from "react-toastify";
+import { images } from "@/app/lib/image/images";
 
 interface EditProps {
   // show: boolean;
@@ -109,8 +110,8 @@ const EditDosen: React.FC<EditProps> = ({
 
     try {
       await apiClient.put(`/api/dosen/${id}/update`, dosenData);
-      setUploading(false);
       onSuccess();
+      setUploading(false);
 
       setModalIsOpen(false);
       toast.success("Dosen updated successfully");
@@ -151,7 +152,7 @@ const EditDosen: React.FC<EditProps> = ({
               {previewURL ? (
                 <div className="">
                   <Image
-                    src={previewURL}
+                    src={previewURL ?? images.imageDefault}
                     alt="Preview"
                     className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
@@ -163,7 +164,7 @@ const EditDosen: React.FC<EditProps> = ({
                 <div className="">
                   <Image
                     alt="Preview"
-                    src={""}
+                    src={images.imageDefault}
                     onClick={handleImageClick}
                     className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}

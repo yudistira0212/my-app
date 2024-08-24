@@ -8,23 +8,13 @@ import "swiper/css/pagination";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Dosen as DosenType } from "@prisma/client";
 import apiClient from "@/app/lib/axios/axios";
+import Image from "next/image";
+import Link from "next/link";
 
-const Dosen = () => {
-  const [dataDosen, setDataDosen] = useState<DosenType[]>([]);
-
-  useEffect(() => {
-    getDataDosen();
-  }, []);
-  const getDataDosen = async () => {
-    try {
-      const result = await apiClient.get("/api/dosen");
-      const data = result.data;
-      setDataDosen(data);
-      console.log({ data });
-    } catch (error) {
-      console.log("error get data dosen : ", error);
-    }
-  };
+interface Props {
+  dataDosen: DosenType[];
+}
+const Dosen: React.FC<Props> = ({ dataDosen }) => {
   return (
     <div className="w-full bg-blue-900 py-8">
       <h2 className="text-center text-white text-2xl font-bold mb-4">
@@ -47,15 +37,20 @@ const Dosen = () => {
       >
         {dataDosen.map((value, index) => (
           <SwiperSlide key={value.id} className="flex flex-col  ">
-            <div className="w-full  flex justify-center">
+            <Link
+              href={`/dosen/${value.id}`}
+              className="w-full  flex justify-center"
+            >
               <div className="w-48 h-48 bg-white rounded-full  overflow-hidden mb-4">
-                <img
+                <Image
                   src={value.url_gambar ?? ""}
                   alt={value.nama}
                   className="w-full h-full object-cover"
+                  width={300}
+                  height={300}
                 />
               </div>
-            </div>
+            </Link>
             <div className="text-center text-white">
               <h3 className="font-bold">{value.nama}</h3>
               <p>{value.jabatan}</p>

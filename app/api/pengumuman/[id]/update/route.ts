@@ -18,8 +18,6 @@ export async function PUT(request: Request) {
   }
 
   try {
-    console.log(id, judul, text, gambar, url_gambar, user_id);
-
     const updatePengumuman = await prisma.pengumuman.update({
       where: { id },
       data: {

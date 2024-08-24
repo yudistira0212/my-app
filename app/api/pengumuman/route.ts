@@ -7,8 +7,9 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const pengumuman = await prisma.pengumuman.findMany();
-    console.log(pengumuman);
+    const pengumuman = await prisma.pengumuman.findMany({
+      orderBy: { id: "desc" },
+    });
 
     return NextResponse.json(pengumuman, { status: 200 });
   } catch (error) {
@@ -22,8 +23,6 @@ export async function GET() {
 // creat pengumuman
 export async function POST(request: Request) {
   const { judul, text, gambar, url_gambar, user_id } = await request.json();
-
-  console.log({ judul, text, gambar, url_gambar, user_id });
 
   // Validate required fields
   if (!judul || !text || !gambar) {

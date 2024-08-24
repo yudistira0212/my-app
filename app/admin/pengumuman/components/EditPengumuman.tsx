@@ -9,6 +9,7 @@ import { FaEdit } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
 import { toast } from "react-toastify";
+import { images } from "@/app/lib/image/images";
 
 interface EditProps {
   id: number;
@@ -141,7 +142,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
               {previewURL ? (
                 <div>
                   <Image
-                    src={previewURL}
+                    src={previewURL || images.imageDefault}
                     alt="Preview"
                     className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
@@ -153,7 +154,7 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
                 <div>
                   <Image
                     alt="Preview"
-                    src={""}
+                    src={images.imageDefault}
                     onClick={handleImageClick}
                     className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}

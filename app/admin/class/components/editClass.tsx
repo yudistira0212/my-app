@@ -3,7 +3,7 @@
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
 import { Dialog, Transition } from "@headlessui/react";
-import { Dosen } from "@prisma/client";
+import { Class, Dosen } from "@prisma/client";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
@@ -12,69 +12,74 @@ import { toast } from "react-toastify";
 
 interface editProps {
   id: number;
+  dataClass: Class;
+  dataDosen: Dosen[];
   onSuccess: () => void;
 }
-const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
+
+const formatDate = (date: Date | null): string => {
+  return moment(date).format("YYYY-MM-DDTHH:MM");
+};
+
+const EditClass: React.FC<editProps> = ({
+  id,
+  onSuccess,
+  dataClass,
+  dataDosen,
+}) => {
   const [formData, setFormData] = useState({
-    id: 0,
-    nama: "",
-    sks: 0,
-    waktu_mulai: "",
-    waktu_selesai: "",
-    dosen_id: "",
-    ruangan: "",
+    id: dataClass.id,
+    nama: dataClass.nama,
+    sks: dataClass.sks,
+    waktu_mulai: formatDate(dataClass.waktu_mulai),
+    waktu_selesai: formatDate(dataClass.waktu_selesai),
+    dosen_id: dataClass.dosen_id,
+    ruangan: dataClass.ruangan,
   });
 
-  const [dosenList, setDosenList] = useState<Dosen[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchDosen();
-  }, []);
+  // const fetchDosen = async () => {
+  //   try {
+  //     const response = await apiClient.get("/api/dosen");
+  //     console.log(response.data);
+  //     setDosenList(response.data);
+  //   } catch (error: any) {
+  //     if (error.response) {
+  //       console.error(error.response.data.error);
+  //     } else {
+  //       console.error(error);
+  //     }
+  //   }
+  // };
 
-  const fetchDosen = async () => {
-    try {
-      const response = await apiClient.get("/api/dosen");
-      setDosenList(response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response.data.error);
-      } else {
-        console.error(error);
-      }
-    }
-  };
+  // const fetchClassData = async (id: number) => {
+  //   try {
+  //     const response = await apiClient.get(`/api/class/${id}`);
+  //     const data = response.data;
 
-  const fetchClassData = async (id: number) => {
-    try {
-      const response = await apiClient.get(`/api/class/${id}`);
-      const data = response.data;
-
-      const formatDate = (date: Date | null): string => {
-        return moment(date).format("YYYY-MM-DDTHH:MM");
-      };
-
-      setFormData({
-        id: data.id,
-        nama: data.nama,
-        sks: data.sks,
-        waktu_mulai: formatDate(data.waktu_mulai),
-        waktu_selesai: formatDate(data.waktu_selesai),
-        dosen_id: data.dosen_id.toString(),
-        ruangan: data.ruangan,
-      });
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response.data.error);
-      } else {
-        console.error(error);
-      }
-    }
-  };
+  //     setFormData({
+  //       id: data.id,
+  //       nama: data.nama,
+  //       sks: data.sks,
+  //       waktu_mulai: formatDate(data.waktu_mulai),
+  //       waktu_selesai: formatDate(data.waktu_selesai),
+  //       dosen_id: data.dosen_id.toString(),
+  //       ruangan: data.ruangan,
+  //     });
+  //   } catch (error: any) {
+  //     if (error.response) {
+  //       console.error(error.response.data.error);
+  //     } else {
+  //       console.error(error);
+  //     }
+  //   }
+  // };
 
   const openEditModal = () => {
-    fetchClassData(id);
+    // fetchClassData(id);
+    // fetchDosen();
     setModalIsOpen(true);
   };
 
@@ -112,13 +117,13 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
 
       // Reset form after submission
       setFormData({
-        id: 0,
-        nama: "",
-        sks: 0,
-        waktu_mulai: "",
-        waktu_selesai: "",
-        dosen_id: "",
-        ruangan: "",
+        id: dataClass.id,
+        nama: dataClass.nama,
+        sks: dataClass.sks,
+        waktu_mulai: formatDate(dataClass.waktu_mulai),
+        waktu_selesai: formatDate(dataClass.waktu_selesai),
+        dosen_id: dataClass.dosen_id,
+        ruangan: dataClass.ruangan,
       });
 
       toast.success("Class updated successfully");
@@ -259,8 +264,10 @@ const EditClass: React.FC<editProps> = ({ id, onSuccess }) => {
                 required
                 className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
               >
-                <option value="">Select a Dosen</option>
-                {dosenList.map((dosen) => (
+                <option value="" disabled>
+                  Select a Dosen
+                </option>
+                {dataDosen.map((dosen) => (
                   <option key={dosen.id} value={dosen.id}>
                     {dosen.nama}
                   </option>

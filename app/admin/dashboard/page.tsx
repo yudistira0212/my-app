@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useCallback } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Loading from "@/app/components/common/loading/Loading";
@@ -35,7 +35,7 @@ const DashboardUtama = () => {
     fetchProdi();
   }, []);
 
-  const fetchProdi = async () => {
+  const fetchProdi = useCallback(async () => {
     setLoadingData(true);
     try {
       const response = await apiClient.get(`/api/prodi/1`);
@@ -63,7 +63,7 @@ const DashboardUtama = () => {
     } finally {
       setLoadingData(false);
     }
-  };
+  }, []);
 
   return (
     <div className="flex flex-col bg-white p-4">

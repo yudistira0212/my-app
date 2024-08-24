@@ -1,47 +1,23 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import apiClient from "@/app/lib/axios/axios";
 import { Pengumuman as TypePengumuman } from "@prisma/client";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
-const Pengumuman = () => {
+interface Props {
+  dataPengumuman: TypePengumuman[];
+}
+const Pengumuman: React.FC<Props> = ({ dataPengumuman }) => {
   const router = useRouter();
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [dataPengumuman, setDataPengumuman] = useState<TypePengumuman[]>([]);
+  // const [dataPengumuman, setDataPengumuman] = useState<TypePengumuman[]>([]);
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  const getDataPengumuman = async () => {
-    try {
-      const result = await apiClient.get("/api/pengumuman");
-      const data = result.data;
-      setDataPengumuman(data);
-    } catch (error) {
-      console.log("error get data : ", error);
-    }
-  };
-
-  useEffect(() => {
-    getDataPengumuman();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleSlideNext();
-    }, 5000); // 5 detik
-
-    return () => clearInterval(interval); // Bersihkan interval saat komponen dihapus
-  }, [activeSlide]);
-
   const handleSlideChange = (index: number) => {
     setActiveSlide(index);
-  };
-
-  const handleSlideNext = () => {
-    setActiveSlide((prev) => (prev + 1) % dataPengumuman.length);
   };
 
   const handleSlidePrev = () => {
@@ -49,6 +25,18 @@ const Pengumuman = () => {
       (prev) => (prev - 1 + dataPengumuman.length) % dataPengumuman.length
     );
   };
+
+  const handleSlideNext = useCallback(() => {
+    setActiveSlide((prev) => (prev + 1) % dataPengumuman.length);
+  }, [dataPengumuman.length]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleSlideNext();
+    }, 5000); // 5 detik
+
+    return () => clearInterval(interval); // Bersihkan interval saat komponen dihapus
+  }, [handleSlideNext]);
 
   return (
     <div className="relative overflow-hidden w-full">
@@ -70,6 +58,19 @@ const Pengumuman = () => {
           className="relative flex transition-transform w-full duration-1000 ease-in-out"
           style={{ transform: `translateX(-${activeSlide * 100}%)` }}
         >
+          {dataPengumuman.length === 0 && (
+            <div
+              className="w-full h-[50vh] flex-shrink-0 hover:cursor-pointer flex flex-col items-center justify-center bg-cover bg-center"
+              //  style={{ backgroundImage: `url(${})` }}
+            >
+              <div className="bg-white   bg-opacity-40  shadow-lg rounded-md p-4 text-center">
+                <h2 className="text-3xl  capitalize ">
+                  pengumuman tidak terseida
+                </h2>
+                {/* <p className="text-gray-700">{value.text}</p> */}
+              </div>
+            </div>
+          )}
           {dataPengumuman.map((value, index) => (
             <div
               key={index}

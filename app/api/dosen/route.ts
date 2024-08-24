@@ -7,7 +7,14 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const dosen = await prisma.dosen.findMany();
+    const dosen = await prisma.dosen.findMany({
+      include: {
+        prodi: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
     return NextResponse.json(dosen, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch dosen:", error);

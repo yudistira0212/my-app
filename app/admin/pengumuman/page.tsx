@@ -15,7 +15,7 @@ const PagePengumuman = () => {
   const fetchData = async () => {
     try {
       const response = await apiClient.get(`/api/pengumuman`);
-      console.log(response.data);
+      // console.log(response.data);
       setListData(response.data);
     } catch (error: any) {
       if (error.response) {

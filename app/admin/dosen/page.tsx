@@ -1,11 +1,10 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import DosenInput from "./components/dosenInput";
 import TableDosen from "./components/tableDosen";
 import { Dosen } from "@prisma/client";
 import apiClient from "@/app/lib/axios/axios";
-import Loading from "./Loading";
 
 const PageDosen = () => {
   const [dosen, setDosenList] = useState<Dosen[]>([]);
@@ -18,7 +17,7 @@ const PageDosen = () => {
     fetchDosen();
   }, []);
 
-  const fetchDosen = async () => {
+  const fetchDosen = useCallback(async () => {
     try {
       const response = await apiClient.get("/api/dosen");
       setDosenList(response.data);
@@ -29,7 +28,8 @@ const PageDosen = () => {
         console.error(error);
       }
     }
-  };
+  }, []);
+
   return (
     <div>
       <div className=" flex flex-col bg-white p-4">
@@ -38,9 +38,7 @@ const PageDosen = () => {
           <DosenInput onSuccess={getDosen} />
         </div>
         <div>
-          <Suspense fallback={<Loading />}>
-            <TableDosen dosenList={dosen} fetchDosen={fetchDosen} />
-          </Suspense>
+          <TableDosen dosenList={dosen} fetchDosen={fetchDosen} />
         </div>
       </div>
     </div>

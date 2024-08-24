@@ -1,31 +1,32 @@
 "use client";
 
-import apiClient from "@/app/lib/axios/axios";
-import { Class as ClassType } from "@prisma/client";
+import { Class as ClassType, Dosen } from "@prisma/client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 
-const Class = () => {
-  const [dataClass, setDataClass] = useState<ClassType[]>([]);
-  useEffect(() => {
-    getData();
-  }, []);
+interface ClassWhitDosen extends ClassType {
+  dosen: Dosen;
+}
 
-  const getData = async () => {
-    try {
-      const response = await apiClient.get("/api/class");
-      const data = response.data;
-      setDataClass(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return [];
-    }
-  };
-
+interface Props {
+  dataClass: ClassWhitDosen[];
+}
+const Class: React.FC<Props> = ({ dataClass }) => {
   const [search, setSearch] = useState("");
 
+  const handleSearchChange = useCallback(
+    (event: { target: { value: React.SetStateAction<string> } }) => {
+      setSearch(event.target.value);
+    },
+    []
+  );
+
+  const filteredClasses = dataClass.filter((classItem) =>
+    classItem.nama.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className=" h-screen">
+    <div className=" min-h-screen">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold">Class Info</h1>
       </div>
@@ -47,9 +48,9 @@ const Class = () => {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
@@ -59,26 +60,30 @@ const Class = () => {
             id="default-search"
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
             placeholder="Search..."
-            required
+            value={search}
+            onChange={handleSearchChange}
           />
-          <button
-            type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-4 py-2"
-          >
-            Search
-          </button>
         </div>
       </form>
 
       <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 my-6">
-          {dataClass.map((value, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
+          {filteredClasses.length === 0 && (
+            <h1 className="text-xl font-bold uppercase">
+              Tidak ada kelas yang tersedia
+            </h1>
+          )}
+          {filteredClasses.map((value, index) => (
             <Link
               key={value.id}
-              className="text-white p-4 rounded-lg hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
+              className="text-white p-4 rounded-3xl hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
               href={`/class/${value.id}`}
             >
-              <div>{value.nama}</div>
+              <div className="flex flex-col gap-1 justify-center text-center">
+                <div>{value.nama}</div>
+                <div>{value.sks}</div>
+                <div>{value.dosen?.nama}</div>
+              </div>
             </Link>
           ))}
         </div>

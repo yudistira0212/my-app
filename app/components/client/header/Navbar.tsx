@@ -11,14 +11,14 @@ const Navbar = () => {
             alt="logo kampus merdeka"
             height={50}
             width={50}
-            className="object-contain"
+            className="object-contain w-auto h-auto"
           />
           <Image
             src={images.logoTutwuri}
             alt="logo tutwuri"
             height={50}
             width={50}
-            className="object-contain"
+            className="object-contain w-auto h-auto"
           />
         </div>
         <div className="h-10 flex items-center gap-2">

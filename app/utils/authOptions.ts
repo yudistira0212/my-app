@@ -29,8 +29,6 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (user && passwordValid) {
-          console.log(user);
-
           return {
             ...user,
             id: String(user.id), // Convert id to string
@@ -49,9 +47,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      console.log(session);
-      console.log(token);
-
       if (token) {
         session.user = {
           name: token.name,
@@ -62,8 +57,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user }) {
-      console.log(token);
-      console.log(user);
       if (user) {
         token.id = user.id;
       }

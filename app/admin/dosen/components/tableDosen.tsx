@@ -6,6 +6,8 @@ import EditDosen from "./editDosen";
 import DeleteDosen from "./deleteDosen";
 import { Dosen } from "@prisma/client";
 import ShowDosen from "./ShowDosen";
+import Image from "next/image";
+import { images } from "@/app/lib/image/images";
 interface tableDosenProps {
   dosenList: Dosen[];
   fetchDosen: () => void;
@@ -54,10 +56,12 @@ const TableDosen: React.FC<tableDosenProps> = ({ dosenList, fetchDosen }) => {
                 <td className="px-6 py-4">{dosen.nama}</td>
                 <td className="px-6 py-4">{dosen.jabatan}</td>
                 <td className="px-6 py-4">
-                  <img
-                    src={dosen.url_gambar!}
+                  <Image
+                    src={dosen.url_gambar || images.imageDefault}
                     alt={dosen.nama!}
                     className="w-16 h-16 object-cover rounded-lg"
+                    width={300}
+                    height={300}
                   />
                 </td>
                 <td className="px-6 py-4">

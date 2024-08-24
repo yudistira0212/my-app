@@ -7,8 +7,6 @@ export async function PATCH(req: NextRequest, { params }: any) {
   const { id } = params;
   const body = await req.json();
 
-  // console.log(body.data.visi);
-
   try {
     const updatedProdi = await prisma.prodi.update({
       where: { id: Number(id) },
@@ -31,7 +29,7 @@ export async function PATCH(req: NextRequest, { params }: any) {
   } catch (error) {
     console.error("Error updating Prodi:", error);
     return NextResponse.json(
-      { message: "Failed to update Prodi" },
+      { error: "Failed to update Prodi" },
       { status: 500 }
     );
   }
@@ -39,24 +37,21 @@ export async function PATCH(req: NextRequest, { params }: any) {
 
 export async function GET(req: NextRequest, { params }: any) {
   const { id } = params;
-  console.log(id);
 
   try {
     const prodi = await prisma.prodi.findUnique({
       where: { id: Number(id) },
     });
 
-    console.log(prodi);
-
     if (!prodi) {
-      return NextResponse.json({ message: "Prodi not found" }, { status: 404 });
+      return NextResponse.json({ error: "Prodi not found" }, { status: 404 });
     }
 
     return NextResponse.json(prodi, { status: 200 });
   } catch (error) {
     console.error("Error fetching Prodi:", error);
     return NextResponse.json(
-      { message: "Failed to fetch Prodi" },
+      { error: "Failed to fetch Prodi" },
       { status: 500 }
     );
   }

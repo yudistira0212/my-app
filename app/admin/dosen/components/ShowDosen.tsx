@@ -1,4 +1,5 @@
 import Modals from "@/app/components/ui/modals/Modals";
+import { images } from "@/app/lib/image/images";
 import { Dosen } from "@prisma/client";
 import moment from "moment";
 import Image from "next/image";
@@ -27,7 +28,7 @@ const ShowDosen: React.FC<Props> = ({ dataDosen }) => {
         >
           <div className="overflow-auto max-h-96">
             <Image
-              src={dataDosen.url_gambar ?? ""}
+              src={dataDosen.url_gambar ?? images.imageDefault}
               alt={dataDosen.gambar ?? ""}
               className="col-span-8"
               width={100}

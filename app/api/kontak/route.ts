@@ -7,7 +7,11 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const kontak = await prisma.kontak.findMany();
+    const kontak = await prisma.kontak.findMany({
+      include: {
+        prodi: true,
+      },
+    });
     return NextResponse.json(kontak, { status: 200 });
   } catch (error) {
     console.error("Failed to fetch kontak:", error);
@@ -17,11 +21,10 @@ export async function GET() {
     );
   }
 }
+
 // creat kontak
 export async function POST(request: Request) {
   const body = await request.json();
-
-  console.log(body);
 
   try {
     const updateKontak = await prisma.kontak.create({
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error updating kontak:", error);
     return NextResponse.json(
-      { message: "Failed to update kontak" },
+      { error: "Failed to update kontak" },
       { status: 500 }
     );
   }

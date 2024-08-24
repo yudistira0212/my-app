@@ -14,6 +14,7 @@ interface ClassWithDosen extends Class {
 
 interface ListClassProps {
   classes: ClassWithDosen[];
+  dataDosen: Dosen[];
   fetcData: () => void;
 }
 
@@ -21,7 +22,11 @@ const formatDate = (date: Date | null): string => {
   return moment(date).format("YYYY/MM/DD, HH:mm");
 };
 
-const ListClass: React.FC<ListClassProps> = ({ classes, fetcData }) => {
+const ListClass: React.FC<ListClassProps> = ({
+  classes,
+  fetcData,
+  dataDosen,
+}) => {
   return (
     <div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -69,7 +74,12 @@ const ListClass: React.FC<ListClassProps> = ({ classes, fetcData }) => {
                 <td className="px-6 py-4">{cls.dosen.nama}</td>
                 <td className="px-6 py-4">
                   <div className="flex text-center gap-2">
-                    <EditClass id={cls.id} onSuccess={fetcData} />
+                    <EditClass
+                      id={cls.id}
+                      onSuccess={fetcData}
+                      dataClass={cls}
+                      dataDosen={dataDosen}
+                    />
 
                     <DeleteClass id={cls.id} onSuccess={fetcData} />
                     <ShowClass dataClass={cls} />

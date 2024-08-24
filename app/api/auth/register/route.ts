@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(body.password, 10);
-    console.log(hashedPassword);
 
     // Create new user
     const user = await prisma.user.create({
@@ -28,8 +27,6 @@ export async function POST(req: NextRequest) {
         role: "admin", // Set role sesuai kebutuhan Anda
       },
     });
-
-    console.log("User created:", user);
 
     return NextResponse.json(
       { message: "User registered successfully" },

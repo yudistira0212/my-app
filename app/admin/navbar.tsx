@@ -1,8 +1,10 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { images } from "../lib/image/images";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -24,10 +26,12 @@ const Navbar = () => {
         DASHBOARD ADMIN
       </span>
       <div className="relative">
-        <img
-          src="/profile.jpg"
+        <Image
+          src={/* session?.user?.image|| */ images.imageDefault}
           alt="Profile"
           className="h-8 w-8 rounded-full cursor-pointer"
+          width={32}
+          height={32}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         />
         {/* {dropdownOpen && (

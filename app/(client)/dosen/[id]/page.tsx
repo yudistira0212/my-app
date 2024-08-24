@@ -8,6 +8,7 @@ import Pendidikan from "./components/Pendidikan";
 import Nama from "./components/Nama";
 import Biografi from "./components/Biografi";
 import PublikasiIlmiah from "./components/PublikasiIlmiah";
+import Link from "next/link";
 
 const PageDosen = () => {
   const [dataDosen, setDataDosen] = useState<Dosen>();
@@ -65,9 +66,12 @@ const PageDosen = () => {
           </div>
         </div>
 
-        <button className="bg-blue-900 text-white px-4 py-2 mt-8 rounded-md">
+        <Link
+          href="/home"
+          className="bg-blue-900 text-white px-4 py-2 mt-8 rounded-md"
+        >
           BACK
-        </button>
+        </Link>
       </div>
     </div>
   );

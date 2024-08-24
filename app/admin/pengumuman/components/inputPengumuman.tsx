@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
 import { toast } from "react-toastify";
+import { images } from "@/app/lib/image/images";
 
 interface PengumumanInputProps {
   onSuccess: () => void;
@@ -79,7 +80,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
     };
 
     try {
-      const response = await apiClient.post("/api/pengumuman", pengumumanData);
+      await apiClient.post("/api/pengumuman", pengumumanData);
 
       // Reset form fields
       setJudul("");
@@ -126,7 +127,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
               {previewURL ? (
                 <div className="">
                   <Image
-                    src={previewURL}
+                    src={previewURL || images.imageDefault}
                     alt="Preview"
                     className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     onClick={handleImageClick}
@@ -138,7 +139,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
                 <div className="">
                   <Image
                     alt="Preview"
-                    src={""}
+                    src={images.imageDefault}
                     onClick={handleImageClick}
                     className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
                     width={200}

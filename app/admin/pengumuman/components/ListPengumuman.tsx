@@ -6,6 +6,7 @@ import EditPengumuman from "./EditPengumuman";
 import DeletePengumuman from "./DeletePengumuman";
 import Image from "next/image";
 import ShowPengumuman from "./ShowPengumuman";
+import { images } from "@/app/lib/image/images";
 
 interface ListPengumumanProps {
   listData: Pengumuman[];
@@ -55,7 +56,7 @@ const ListPengumuman: React.FC<ListPengumumanProps> = ({
                 <td className="px-6 py-4">
                   <Image
                     src={value.url_gambar!}
-                    alt={value.gambar!}
+                    alt={value.gambar ?? images.imageDefault}
                     className="w-16 h-16 object-cover rounded-lg"
                     width={100}
                     height={100}

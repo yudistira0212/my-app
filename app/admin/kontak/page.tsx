@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Loading from "@/app/components/common/loading/Loading";
 import KontakHeader from "./components/KontakHeader";
 import KontakForm from "./components/KontakForm";
@@ -21,7 +21,7 @@ const PageKontak = () => {
     fetchKontak();
   }, []);
 
-  const fetchKontak = async () => {
+  const fetchKontak = useCallback(async () => {
     try {
       setLoading(true);
       const res = await apiClient.get("/api/kontak/1");
@@ -43,7 +43,7 @@ const PageKontak = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <div className="flex flex-col bg-white p-4">

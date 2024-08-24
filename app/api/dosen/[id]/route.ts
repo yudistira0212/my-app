@@ -11,8 +11,6 @@ export async function GET(
 ) {
   const { id } = params;
 
-  console.log(id);
-
   // Validate if ID is a valid number
   if (isNaN(Number(id))) {
     return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });

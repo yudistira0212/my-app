@@ -1,22 +1,42 @@
 import { PrismaClient } from "@prisma/client";
-import Error from "next/error";
+
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
 // get all
 
-export async function GET() {
-  try {
-    const classes = await prisma.class.findMany({
-      include: { dosen: true },
-    });
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const keyword = searchParams.get("search");
 
-    return NextResponse.json(classes, { status: 200 });
-  } catch (error: any) {
+  try {
+    let classes;
+
+    if (keyword) {
+      classes = await prisma.class.findMany({
+        where: {
+          nama: {
+            contains: keyword,
+          },
+        },
+        include: {
+          dosen: true,
+        },
+      });
+    } else {
+      classes = await prisma.class.findMany({
+        include: {
+          dosen: true,
+        },
+      });
+    }
+
+    return NextResponse.json(classes);
+  } catch (error) {
     console.error("Error fetching classes:", error);
     return NextResponse.json(
-      { error: "Failed to fetch class" },
+      { error: "Gagal mengambil data kelas" },
       { status: 500 }
     );
   }
@@ -26,9 +46,8 @@ export async function GET() {
 export async function POST(request: Request) {
   const { nama, sks, waktu_mulai, waktu_selesai, dosen_id, ruangan } =
     await request.json();
-  try {
-    console.log(sks);
 
+  try {
     const classes = await prisma.class.create({
       data: {
         nama,

@@ -8,7 +8,6 @@ import moment from "moment";
 import React from "react";
 import Absen from "./Absen";
 import Link from "next/link";
-import Image from "next/image";
 
 interface ClassWithRelations extends ClassType {
   dosen: Dosen; // Relation to Dosen
@@ -65,7 +64,7 @@ const Class: React.FC<Props> = ({ dataClass }) => {
         </Link>
       </div>
 
-      <div className="w-full">
+      {/* <div className="w-full">
         <Image
           src=""
           alt="Gedung"
@@ -73,7 +72,7 @@ const Class: React.FC<Props> = ({ dataClass }) => {
           height={251}
           className="w-full"
         />
-      </div>
+      </div> */}
 
       {/* <div className="bg-white p-8 w-full text-center">
       <h3 className="text-xl font-bold text-blue-900 mb-4">

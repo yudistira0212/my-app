@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { error } from "console";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
 
   if (!mahasiswa) {
     return NextResponse.json(
-      { message: "Mahasiswa tidak ditemukan" },
+      { error: "Mahasiswa tidak ditemukan" },
       { status: 404 }
     );
   }
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
 
   if (!classData) {
     return NextResponse.json(
-      { message: "Class tidak ditemukan" },
+      { error: "Class tidak ditemukan" },
       { status: 404 }
     );
   }
@@ -37,17 +38,11 @@ export async function POST(request: Request) {
 
   // Cek apakah waktu absen valid berdasarkan waktu kelas
   if (now < classData.waktu_mulai) {
-    return NextResponse.json(
-      { message: "Kelas Belum dimulai" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Kelas Belum dimulai" }, { status: 500 });
   }
 
   if (now > classData.waktu_selesai) {
-    return NextResponse.json(
-      { message: "Kelas Telah Selesai" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Kelas Telah Selesai" }, { status: 500 });
   }
 
   // Cek apakah mahasiswa sudah absen untuk kelas ini
@@ -59,7 +54,7 @@ export async function POST(request: Request) {
   });
 
   if (sudahAbsen) {
-    return NextResponse.json({ message: "Anda Sudah Absen" }, { status: 500 });
+    return NextResponse.json({ error: "Anda Sudah Absen" }, { status: 500 });
   }
 
   try {
@@ -71,7 +66,28 @@ export async function POST(request: Request) {
       },
     });
     return NextResponse.json(absen, { status: 200 });
-  } catch (message) {
-    return NextResponse.json({ message: "Gagal absen" }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: "Gagal absen" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const absen = await prisma.absen.findMany({
+      include: {
+        mahasiswa: true,
+        class: true,
+      },
+      orderBy: {
+        waktu_absen: "desc",
+      },
+    });
+    return NextResponse.json(absen, { status: 200 });
+  } catch (error) {
+    console.log("error get data absen : ", error);
+    return NextResponse.json(
+      { error: "Gagal mendapatkan data absensi" },
+      { status: 500 }
+    );
   }
 }

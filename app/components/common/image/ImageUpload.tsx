@@ -1,5 +1,7 @@
 "use client";
 
+import { images } from "@/app/lib/image/images";
+import Image from "next/image";
 import React from "react";
 
 interface ImageUploadProps {
@@ -38,9 +40,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       </label>
       <label htmlFor={id}>
         <div className="flex flex-col items-center">
-          <img
+          <Image
             className="bg-gray-200 rounded-lg"
-            src={filePreview || fileUrl}
+            src={filePreview || fileUrl || images.imageDefault}
             alt={`preview ${label}`}
             width={200}
             height={200}

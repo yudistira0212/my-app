@@ -23,15 +23,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   // }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="h-screen bg-gray-100 overflow-hidden">
       <Head>
         <title>My Dashboard</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 ">{children}</main>
+      <div className="sticky top-0 z-10 shadow-xl">
+        <Navbar />
+      </div>
+      <div className="flex h-full">
+        <div className="sticky top-0 left-0">
+          <Sidebar />
+        </div>
+
+        <div className="flex-1 overflow-y-auto h-full pb-32">{children}</div>
       </div>
     </div>
   );

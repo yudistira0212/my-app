@@ -1,7 +1,12 @@
+import Loading from "@/app/components/common/loading/Loading";
 import React from "react";
 
-const Loading = () => {
-  return <div>Loading....</div>;
+const loading = () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Loading text="Loading..." />
+    </div>
+  );
 };
 
-export default Loading;
+export default loading;

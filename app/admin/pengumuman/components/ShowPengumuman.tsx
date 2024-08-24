@@ -1,4 +1,5 @@
 import Modals from "@/app/components/ui/modals/Modals";
+import { images } from "@/app/lib/image/images";
 import { Pengumuman } from "@prisma/client";
 
 import Image from "next/image";
@@ -27,7 +28,7 @@ const ShowPengumuman: React.FC<Props> = ({ dataPengumuman }) => {
         >
           <div className="grid grid-cols-6">
             <Image
-              src={dataPengumuman.url_gambar ?? ""}
+              src={dataPengumuman.url_gambar ?? images.imageDefault}
               alt={dataPengumuman.gambar ?? ""}
               className="col-span-6"
               width={100}

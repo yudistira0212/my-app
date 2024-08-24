@@ -21,8 +21,6 @@ export async function GET() {
 export async function POST(request: Request) {
   const body = await request.json();
 
-  console.log(body);
-
   try {
     const updatedProdi = await prisma.prodi.create({
       data: {
@@ -44,7 +42,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error updating Prodi:", error);
     return NextResponse.json(
-      { message: "Failed to update Prodi" },
+      { error: "Failed to update Prodi" },
       { status: 500 }
     );
   }
