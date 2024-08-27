@@ -5,20 +5,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { images } from "../lib/image/images";
+import { useAuth } from "../hooks/useAuth";
+import Loading from "@/app/components/common/loading/Loading";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  // const { data: session, status } = useSession();
-  // const router = useRouter();
 
-  // const handleSignOut = async () => {
-  //   await signOut(); // Panggil fungsi signOut untuk menghapus session
-  //   router.push("/login"); // Arahkan pengguna ke halaman login setelah logout
-  // };
+  const { login, loading, error, logout, session } = useAuth();
 
-  // if (status === "loading") {
-  //   return <p>Loading...</p>;
-  // }
+  const handleSignOut = async () => {
+    await logout();
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <nav className="bg-[#263159] text-white flex justify-between items-center p-4  shadow-inner">
@@ -27,14 +32,15 @@ const Navbar = () => {
       </span>
       <div className="relative">
         <Image
-          src={/* session?.user?.image|| */ images.imageDefault}
+          src={session?.user?.image || images.imageDefault}
           alt="Profile"
           className="h-8 w-8 rounded-full cursor-pointer"
           width={32}
           height={32}
           onClick={() => setDropdownOpen(!dropdownOpen)}
         />
-        {/* {dropdownOpen && (
+
+        {dropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg py-2">
             <Link href="#" className="block px-4 py-2"></Link>
             <Link href="#" className="block px-4 py-2">
@@ -47,7 +53,7 @@ const Navbar = () => {
               Log Out
             </button>
           </div>
-        )} */}
+        )}
       </div>
     </nav>
   );

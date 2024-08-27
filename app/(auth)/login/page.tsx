@@ -1,37 +1,29 @@
 "use client";
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Loading from "@/app/components/common/loading/Loading";
 import { toast } from "react-toastify";
+import { useAuth } from "@/app/hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { push } = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { login, loading, error } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const result = await signIn("credentials", {
-      // redirect: false,
-      email,
-      password,
-      redirect: false,
-      callbackUrl: "/admin/utama",
-    });
 
-    if (result?.error) {
-      setLoading(false);
+    const result = await login(email, password);
+
+    if (error) {
       // Handle error here (e.g., show error message)
-      console.error(result.error);
-      toast.error(result.error);
+      console.error(error);
+      toast.error(error);
     } else {
       toast.success("Login success");
       // Redirect to the desired page after successful login
-      setLoading(false);
       push("/admin/dashboard");
     }
   };
