@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { id, judul, text, gambar, url_gambar, user_id } = await request.json();
 
   const pengumuman = await prisma.pengumuman.findUnique({

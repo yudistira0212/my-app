@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
@@ -12,7 +12,7 @@ export async function PUT(
     const user = await prisma.user.update({
       where: { id: Number(id) },
       data: {
-        nama,
+        name: nama,
         email,
         password,
         role,

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 // import { prisma } from '../../../lib/prisma';
 
 const prisma = new PrismaClient();
@@ -19,7 +19,7 @@ export async function GET() {
 }
 
 // creat user
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { nama, email, password, role } = await request.json();
   try {
     const user = await prisma.user.create({

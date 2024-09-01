@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+const allowedOrigins = ["http://localhost:3000", "https://my-app.org"];
+
+const corsOptions = {
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 // Middleware untuk melindungi API route dan mengarahkan root ke /home
 export async function middleware(req: NextRequest) {
   const token = await getToken({
@@ -26,9 +33,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.url));
   }
 
-  // if (token && req.nextUrl.pathname.startsWith("/admin")) {
-  //   return NextResponse.redirect(new URL("/admin/dashboard", req.url));
-  // }
+  if (
+    !req.nextUrl.pathname.startsWith("/api/absen") &&
+    ["PATCH", "POST"].includes(req.method) &&
+    !token
+  ) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
   // Jika ada token, lanjutkan ke request yang diminta
   return NextResponse.next();
@@ -36,5 +47,5 @@ export async function middleware(req: NextRequest) {
 
 // Tentukan path yang harus menggunakan middleware ini
 export const config = {
-  matcher: ["/", "/admin/:path*", "/register", "/login"],
+  matcher: ["/", "/admin/:path*", "/register", "/login", "/api/:path*"],
 };

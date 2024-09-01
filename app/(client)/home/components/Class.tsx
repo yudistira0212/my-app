@@ -1,8 +1,10 @@
 "use client";
 
+import Loading from "@/app/components/common/loading/Loading";
+import ClassSkeleton from "@/app/components/ui/skeleton/ClassSkeleton";
 import { Class as ClassType, Dosen } from "@prisma/client";
 import Link from "next/link";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Suspense } from "react";
 
 interface ClassWhitDosen extends ClassType {
   dosen: Dosen;
@@ -10,8 +12,9 @@ interface ClassWhitDosen extends ClassType {
 
 interface Props {
   dataClass: ClassWhitDosen[];
+  loading: boolean;
 }
-const Class: React.FC<Props> = ({ dataClass }) => {
+const Class: React.FC<Props> = ({ dataClass, loading }) => {
   const [search, setSearch] = useState("");
 
   const handleSearchChange = useCallback(
@@ -67,16 +70,18 @@ const Class: React.FC<Props> = ({ dataClass }) => {
       </form>
 
       <div>
+        {loading && <ClassSkeleton />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
-          {filteredClasses.length === 0 && (
+          {filteredClasses.length === 0 && !loading && (
             <h1 className="text-xl font-bold uppercase">
               Tidak ada kelas yang tersedia
             </h1>
           )}
+
           {filteredClasses.map((value, index) => (
             <Link
               key={value.id}
-              className="text-white p-4 rounded-3xl hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
+              className="text-white p-3 rounded-3xl hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
               href={`/class/${value.id}`}
             >
               <div className="flex flex-col gap-1 justify-center text-center">

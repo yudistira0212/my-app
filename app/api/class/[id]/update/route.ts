@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const { id, nama, sks, waktu_mulai, waktu_selesai, dosen_id, ruangan } =
     await request.json();
 

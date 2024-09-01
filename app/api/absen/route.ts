@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { error } from "console";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
-export async function POST(request: Request) {
+
+export async function POST(request: NextRequest) {
   const { mahasiswaNim, classId } = await request.json();
 
   let mahasiswa_id: number = 0;
