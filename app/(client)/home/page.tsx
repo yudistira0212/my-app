@@ -1,16 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import Pengumuman from "./components/Pengumuman";
 import Dosen from "./components/dosen";
 import Profil from "./components/profil";
-
 import HomeHeader from "./components/HomeHeader";
-
 import Class from "./components/Class";
 import apiClient from "@/app/lib/axios/axios";
-import loading from "./loading";
 
 import type {
   Class as ClassType,
@@ -18,7 +14,7 @@ import type {
   Pengumuman as PengumumanType,
   Prodi,
 } from "@prisma/client";
-import ClassSkeleton from "@/app/components/ui/skeleton/ClassSkeleton";
+
 interface ClassWhitDosen extends ClassType {
   dosen: DosenType;
 }
