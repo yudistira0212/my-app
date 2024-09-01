@@ -1,10 +1,13 @@
 import React from "react";
 
-const Contact = () => {
+interface Props {
+  contact: string;
+}
+const Contact: React.FC<Props> = ({ contact }) => {
   return (
     <div>
-      <h4 className="text-lg font-bold mb-2">Contact</h4>
-      <p>christian.dwi@unipa.ac.id</p>
+      <h4 className="text-lg font-bold mb-2">Kontak</h4>
+      <p>{contact}</p>
     </div>
   );
 };

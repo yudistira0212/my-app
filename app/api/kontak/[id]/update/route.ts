@@ -1,0 +1,41 @@
+import { PrismaClient } from "@prisma/client";
+
+import { NextRequest, NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const body = await req.json();
+
+  const kontak = await prisma.kontak.findUnique({
+    where: { id: Number(id) },
+  });
+  if (!kontak) {
+    return NextResponse.json({ error: "kontak not found" }, { status: 404 });
+  }
+
+  try {
+    const updateKontak = await prisma.kontak.update({
+      where: { id: Number(id) },
+      data: {
+        email: body.email,
+        telephone: body.telephone,
+        alamat: body.alamat,
+        sosial_media: body.sosial_media,
+        prodi_id: body.prodi_id,
+      },
+    });
+
+    return NextResponse.json(updateKontak, { status: 200 });
+  } catch (error) {
+    console.error("Error updating kontak:", error);
+    return NextResponse.json(
+      { error: "Failed to update kontak" },
+      { status: 500 }
+    );
+  }
+}

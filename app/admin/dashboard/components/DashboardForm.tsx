@@ -117,7 +117,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
           data,
         });
       } else {
-        response = await apiClient.patch(`/api/prodi/1`, {
+        response = await apiClient.patch(`/api/prodi/1/update`, {
           data,
         });
       }

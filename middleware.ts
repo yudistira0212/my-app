@@ -16,28 +16,23 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
   });
 
+  const path = req.nextUrl.pathname;
+
   // Redirect dari root ("/") ke "/home"
-  if (req.nextUrl.pathname === "/") {
+  if (path === "/") {
     return NextResponse.redirect(new URL("/home", req.url));
   }
 
   // Jika token tidak ada dan bukan sedang mengakses root atau login, redirect ke halaman login
-  if (
-    (!token && req.nextUrl.pathname.startsWith("/admin")) ||
-    req.nextUrl.pathname.startsWith("/register")
-  ) {
+  if ((!token && path.startsWith("/admin")) || path.startsWith("/register")) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (token && req.nextUrl.pathname.startsWith("/login")) {
+  if (token && path.startsWith("/login")) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.url));
   }
 
-  if (
-    !req.nextUrl.pathname.startsWith("/api/absen") &&
-    ["PATCH", "POST"].includes(req.method) &&
-    !token
-  ) {
+  if (path.endsWith("/update") || (path.endsWith("/delete") && !token)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -47,5 +42,12 @@ export async function middleware(req: NextRequest) {
 
 // Tentukan path yang harus menggunakan middleware ini
 export const config = {
-  matcher: ["/", "/admin/:path*", "/register", "/login", "/api/:path*"],
+  matcher: [
+    "/",
+    "/admin/:path*",
+    "/register",
+    "/login",
+    "/api/:path*/update",
+    "/api/:path*/delete",
+  ],
 };

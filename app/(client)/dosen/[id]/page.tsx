@@ -9,6 +9,7 @@ import Nama from "./components/Nama";
 import Biografi from "./components/Biografi";
 import PublikasiIlmiah from "./components/PublikasiIlmiah";
 import Link from "next/link";
+import Contact from "./components/Contact";
 
 const PageDosen = () => {
   const [dataDosen, setDataDosen] = useState<Dosen>();
@@ -43,9 +44,13 @@ const PageDosen = () => {
                 alt={dataDosen?.gambar ?? ""}
               />
             </div>
-
             <div>
-              <Pendidikan dataPendidikan={dataDosen?.pendidikan ?? ""} />
+              <div>
+                <Pendidikan dataPendidikan={dataDosen?.pendidikan ?? ""} />
+              </div>
+              <div>
+                <Contact contact={dataDosen?.kontak ?? ""} />
+              </div>
             </div>
           </div>
           <div className="md:w-2/3  pt-32 text-justify">

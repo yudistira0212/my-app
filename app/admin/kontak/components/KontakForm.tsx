@@ -51,7 +51,7 @@ const KontakForm: React.FC<KontakFormProps> = ({
       if (cekData.data.length === 0) {
         response = await apiClient.post(`/api/kontak`, data);
       } else {
-        response = await apiClient.patch(`/api/kontak/1`, data);
+        response = await apiClient.patch(`/api/kontak/1/update`, data);
       }
 
       fetchKontak();
