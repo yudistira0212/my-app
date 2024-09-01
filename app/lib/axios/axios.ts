@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Buat instance axios dengan konfigurasi default
 const apiClient = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Gunakan environment variable untuk base URL
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // Gunakan environment variable untuk base URL
   // timeout: 60000, // Set waktu timeout 10 detik
   headers: {
     "Content-Type": "application/json", // Set header default
