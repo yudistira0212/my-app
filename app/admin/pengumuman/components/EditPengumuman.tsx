@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-
 import { updateImage } from "@/app/lib/controllers/imageControllers";
 import { useSession } from "next-auth/react";
 import { FaEdit } from "react-icons/fa";
@@ -10,16 +9,20 @@ import Modals from "@/app/components/ui/modals/Modals";
 import apiClient from "@/app/lib/axios/axios";
 import { toast } from "react-toastify";
 import { images } from "@/app/lib/image/images";
+import { Pengumuman } from "@prisma/client";
 
 interface EditProps {
-  id: number;
+  pengumuman: Pengumuman;
   onSuccess: () => void;
 }
 
-const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
-  const [judul, setJudul] = useState("");
-  const [text, setText] = useState("");
-  const [gambarLama, setGambarLama] = useState("");
+const EditPengumuman: React.FC<EditProps> = ({ pengumuman, onSuccess }) => {
+  const [formData, setFormData] = useState({
+    judul: pengumuman.judul || "",
+    text: pengumuman.text || "",
+    gambar: pengumuman.gambar || "",
+    url_gambar: pengumuman.url_gambar || "",
+  });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -29,38 +32,19 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const getDataPengumuman = async () => {
-    await apiClient
-      .get(`/api/pengumuman/${id}`)
-      .then((response) => {
-        const pengumuman = response.data;
-        setJudul(pengumuman.judul);
-        setText(pengumuman.text);
-        setPreviewURL(pengumuman.url_gambar);
-        setGambarLama(pengumuman.gambar);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.error);
-        } else {
-          console.error(error);
-        }
-      });
-  };
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleImageClick = () => fileInputRef.current?.click();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     setSelectedFile(file);
-    if (file) {
-      const previewURL = URL.createObjectURL(file);
-      setPreviewURL(previewURL);
-    } else {
-      setPreviewURL(null);
-    }
+    setPreviewURL(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,15 +52,16 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
     setUploading(true);
 
     const userId = data?.user.id;
+    let { gambar, url_gambar } = formData;
 
-    let url_gambar = previewURL;
-    let gambar = gambarLama;
     if (selectedFile) {
-      const rute = "pengumuman";
-      const updateResult = await updateImage(rute, gambarLama, selectedFile);
-
+      const updateResult = await updateImage(
+        "pengumuman",
+        gambar,
+        selectedFile
+      );
       if (!updateResult) {
-        alert("Failed to update image");
+        toast.error("Failed to update image");
         setUploading(false);
         return;
       }
@@ -85,33 +70,24 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
     }
 
     const pengumumanData = {
-      id,
-      judul,
-      text,
+      ...formData,
       url_gambar,
       gambar,
       user_id: Number(userId), // Sesuaikan dengan user_id yang tepat
     };
 
     try {
-      const response = await apiClient.put(
-        `/api/pengumuman/${id}/update`,
+      await apiClient.put(
+        `/api/pengumuman/${pengumuman.id}/update`,
         pengumumanData
       );
-
-      setUploading(false);
       onSuccess();
-
       setModalIsOpen(false);
-
       toast.success("Pengumuman updated successfully");
     } catch (error: any) {
+      toast.error(error.response?.data?.error || "Error updating pengumuman");
+    } finally {
       setUploading(false);
-      if (error.response) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error(error);
-      }
     }
   };
 
@@ -120,7 +96,6 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
       <button
         onClick={() => {
           setModalIsOpen(true);
-          getDataPengumuman();
         }}
         className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-md flex"
       >
@@ -139,54 +114,23 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
           <div className="grid grid-cols-4 gap-2">
             <div className="row-span-2">
               <label className="text-gray-700">Gambar</label>
-              {previewURL ? (
-                <div>
-                  <Image
-                    src={previewURL || images.imageDefault}
-                    alt="Preview"
-                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
-                    onClick={handleImageClick}
-                    width={200}
-                    height={200}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <Image
-                    alt="Preview"
-                    src={images.imageDefault}
-                    onClick={handleImageClick}
-                    className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
-                    width={200}
-                    height={200}
-                  />
-                </div>
-              )}
+              <Image
+                src={previewURL ?? pengumuman.url_gambar ?? images.imageDefault}
+                alt="Preview"
+                className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
+                onClick={handleImageClick}
+                width={200}
+                height={200}
+              />
               <input
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
                 hidden
               />
             </div>
-            <div className="col-span-3">
-              <label className="text-gray-700">Judul</label>
-              <input
-                type="text"
-                value={judul}
-                onChange={(e) => setJudul(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12"
-              />
-            </div>
-            <div className="col-span-4">
-              <label className="text-gray-700">Text</label>
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className="text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-24"
-              />
-            </div>
+            {renderTextInput("Judul", "judul", formData.judul, handleChange)}
+            {renderTextArea("Teks", "text", formData.text, handleChange)}
           </div>
 
           <button
@@ -201,5 +145,41 @@ const EditPengumuman: React.FC<EditProps> = ({ id, onSuccess }) => {
     </div>
   );
 };
+
+// Helper functions for rendering inputs
+const renderTextInput = (
+  label: string,
+  name: string,
+  value: string,
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+) => (
+  <div className="col-span-3">
+    <label className="text-gray-700">{label}</label>
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-12"
+    />
+  </div>
+);
+
+const renderTextArea = (
+  label: string,
+  name: string,
+  value: string,
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>
+) => (
+  <div className="col-span-4">
+    <label className="text-gray-700">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-24"
+    />
+  </div>
+);
 
 export default EditPengumuman;

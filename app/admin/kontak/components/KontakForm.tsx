@@ -1,69 +1,51 @@
 "use client";
 
 import React, { useState } from "react";
-
 import { toast } from "react-toastify";
 import Input from "@/app/components/common/input/Input";
 import Button from "@/app/components/common/button/Button";
 import apiClient from "@/app/lib/axios/axios";
+import { Kontak } from "@prisma/client";
 
 interface KontakFormProps {
   isEdit: boolean;
-  kontakData: {
-    email: string;
-    telephone: string;
-    alamat: string;
-    sosialMedia: string;
-  };
-  setKontakData: React.Dispatch<React.SetStateAction<any>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  kontakData: Kontak;
   fetchKontak: () => void;
 }
 
 const KontakForm: React.FC<KontakFormProps> = ({
   isEdit,
   kontakData,
-  setKontakData,
-  setError,
-  setLoading,
   fetchKontak,
 }) => {
-  const [loading, setFormLoading] = useState(false);
+  const [formData, setFormData] = useState(kontakData);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormLoading(true);
     setLoading(true);
 
     try {
-      let response = null;
-
       const data = {
-        email: kontakData.email,
-        telephone: kontakData.telephone,
-        alamat: kontakData.alamat,
-        sosial_media: kontakData.sosialMedia,
+        email: formData.email,
+        telephone: formData.telephone,
+        alamat: formData.alamat,
+        sosial_media: formData.sosial_media,
         prodi_id: 1,
       };
 
       const cekData = await apiClient.get(`/api/kontak`);
       if (cekData.data.length === 0) {
-        response = await apiClient.post(`/api/kontak`, data);
+        await apiClient.post(`/api/kontak`, data);
       } else {
-        response = await apiClient.patch(`/api/kontak/1/update`, data);
+        await apiClient.patch(`/api/kontak/1/update`, data);
       }
 
       fetchKontak();
       toast.success("Kontak successfully saved.");
     } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error(error);
-      }
+      toast.error(error.response?.data?.error || "Error saving kontak");
     } finally {
-      setFormLoading(false);
       setLoading(false);
     }
   };
@@ -72,42 +54,40 @@ const KontakForm: React.FC<KontakFormProps> = ({
     <form onSubmit={handleSubmit}>
       <Input
         isEdit={isEdit}
-        value={kontakData.email ?? ""}
-        onChange={(value) => setKontakData({ ...kontakData, email: value })}
-        id={"email"}
+        value={formData.email ?? ""}
+        onChange={(value) => setFormData({ ...formData, email: value })}
+        id="email"
         label="Email Prodi"
         type="email"
       />
       <Input
         isEdit={isEdit}
-        value={kontakData.telephone ?? ""}
-        onChange={(value) => setKontakData({ ...kontakData, telephone: value })}
-        id={"telephone"}
+        value={formData.telephone ?? ""}
+        onChange={(value) => setFormData({ ...formData, telephone: value })}
+        id="telephone"
         label="Telepon Prodi"
         type="text"
         inputMode="tel"
       />
       <Input
         isEdit={isEdit}
-        value={kontakData.alamat ?? ""}
-        onChange={(value) => setKontakData({ ...kontakData, alamat: value })}
-        id={"alamat"}
+        value={formData.alamat ?? ""}
+        onChange={(value) => setFormData({ ...formData, alamat: value })}
+        id="alamat"
         label="Alamat Prodi"
         type="text"
       />
       <Input
         isEdit={isEdit}
-        value={kontakData.sosialMedia ?? ""}
-        onChange={(value) =>
-          setKontakData({ ...kontakData, sosialMedia: value })
-        }
-        id={"sosialMedia"}
+        value={formData.sosial_media ?? ""}
+        onChange={(value) => setFormData({ ...formData, sosial_media: value })}
+        id="sosialMedia"
         label="URL Sosial Media"
         type="text"
       />
       <div className="mt-4">
         <Button
-          text={"Simpan"}
+          text="Simpan"
           isEdit={isEdit}
           loading={loading}
           textLoading="Menyimpan..."

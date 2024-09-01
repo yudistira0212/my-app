@@ -1,3 +1,4 @@
+import { useFetch } from "@/app/hooks/useFetch";
 import apiClient from "@/app/lib/axios/axios";
 import { Kontak } from "@prisma/client";
 import Link from "next/link";
@@ -7,21 +8,7 @@ import { FaInstagramSquare } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 const Footer = () => {
-  const [dataKontak, setDataKontak] = useState<Kontak>();
-
-  useEffect(() => {
-    getDataKontak();
-  }, []);
-  const getDataKontak = async () => {
-    try {
-      const result = await apiClient.get("/api/kontak/1");
-      const data = result.data;
-      setDataKontak(data);
-      console.log(data);
-    } catch (error) {
-      console.log("error get data kontak : ", error);
-    }
-  };
+  const { data: dataKontak, isLoading, isError } = useFetch("/api/kontak/1");
 
   return (
     <div className="mt-8 text-center p-4 bg-[#A8A8A75E] h-[50vh]">

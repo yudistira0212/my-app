@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-
 import Image from "next/image";
-
 import { uploadImage } from "@/app/lib/controllers/imageControllers";
 import { FaPlus } from "react-icons/fa";
 import Modals from "@/app/components/ui/modals/Modals";
@@ -11,18 +9,19 @@ import apiClient from "@/app/lib/axios/axios";
 import { toast } from "react-toastify";
 import { images } from "@/app/lib/image/images";
 
-interface inputDosenProps {
-  onSuccess: () => void;
+interface InputDosenProps {
+  onSuccess: any;
 }
 
-const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
-  const [nama, setNama] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [pendidikan, setPendidikan] = useState("");
-  const [publikasi, setPublikasi] = useState("");
-  const [contact, setContact] = useState("");
-  const [biografi, setBiografi] = useState("");
-
+const DosenInput: React.FC<InputDosenProps> = ({ onSuccess }) => {
+  const [formData, setFormData] = useState({
+    nama: "",
+    jabatan: "",
+    pendidikan: "",
+    publikasi: "",
+    kontak: "",
+    biografi: "",
+  });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewURL, setPreviewURL] = useState<string | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -45,11 +44,18 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedFile) {
-      alert("Please select a file to upload.");
+      toast.error("Please select a file to upload.");
       return;
     }
 
@@ -59,7 +65,7 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     const uploadResult = await uploadImage(rute, selectedFile);
 
     if (!uploadResult) {
-      alert("Failed to upload image");
+      toast.error("Failed to upload image");
       setUploading(false);
       return;
     }
@@ -67,40 +73,36 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     const { url: url_gambar, namaImage: gambar } = uploadResult;
 
     const dosenData = {
-      nama,
-      jabatan,
-      pendidikan,
-      publikasi,
-      kontak: contact,
+      ...formData,
       url_gambar,
       gambar,
-      biografi,
       prodi_id: 1, // Update with the actual prodi_id
     };
 
     try {
       await apiClient.post("/api/dosen", dosenData);
-      // Reset form fields
-      setNama("");
-      setJabatan("");
-      setPendidikan("");
-      setPublikasi("");
-      setContact("");
-      setBiografi("");
-
-      setSelectedFile(null);
-      setPreviewURL(null);
+      resetForm();
       setModalIsOpen(false);
-      onSuccess();
-
       toast.success("Dosen created successfully");
+      onSuccess();
     } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error(error);
-      }
+      toast.error(error.response?.data?.error || "Error creating dosen");
+    } finally {
+      setUploading(false);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      nama: "",
+      jabatan: "",
+      pendidikan: "",
+      publikasi: "",
+      kontak: "",
+      biografi: "",
+    });
+    setSelectedFile(null);
+    setPreviewURL(null);
   };
 
   return (
@@ -121,93 +123,68 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
           onSubmit={handleSubmit}
           className="bg-white shadow-md rounded-lg p-6"
         >
-          <div className="grid  grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             <div className="row-span-2">
-              <label className=" text-gray-700">Foto</label>
+              <label className="text-gray-700">Foto</label>
               {previewURL ? (
-                <div className="">
-                  <Image
-                    src={previewURL ?? images.imageDefault}
-                    alt="Preview"
-                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
-                    onClick={handleImageClick}
-                    width={200}
-                    height={200}
-                  />
-                </div>
+                <Image
+                  src={previewURL ?? images.imageDefault}
+                  alt="Preview"
+                  className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
+                  onClick={handleImageClick}
+                  width={200}
+                  height={200}
+                />
               ) : (
-                <div className="">
-                  <Image
-                    alt="Preview"
-                    src={images.imageDefault}
-                    onClick={handleImageClick}
-                    className=" bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
-                    width={200}
-                    height={200}
-                  />
-                </div>
+                <Image
+                  alt="Preview"
+                  src={images.imageDefault}
+                  onClick={handleImageClick}
+                  className="bg-gray-200 hover:cursor-pointer rounded-lg mb-2"
+                  width={200}
+                  height={200}
+                />
               )}
               <input
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
                 hidden
               />
             </div>
-            <div className=" col-span-3">
-              <label className=" text-gray-700">Nama</label>
-              <input
-                type="text"
-                value={nama}
-                onChange={(e) => setNama(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
-            <div className=" col-span-3">
-              <label className=" text-gray-700">Posisi</label>
-              <input
-                type="text"
-                value={jabatan}
-                onChange={(e) => setJabatan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
-            <div className="  col-span-2">
-              <label className=" text-gray-700">Pendidikan</label>
-              <textarea
-                value={pendidikan}
-                onChange={(e) => setPendidikan(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
-            <div className=" col-span-2">
-              <label className=" text-gray-700">Publikasi Ilmiah</label>
-              <textarea
-                value={publikasi}
-                onChange={(e) => setPublikasi(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
-            <div className=" col-span-2">
-              <label className=" text-gray-700">Biografi</label>
-              <textarea
-                value={biografi}
-                onChange={(e) => setBiografi(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
-            <div className=" col-span-2">
-              <label className=" text-gray-700">Contact</label>
-              <input
-                type="email"
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                className=" text-gray-900 border border-gray-300 rounded-lg  bg-gray-50 w-full h-12 "
-              />
-            </div>
+            {renderTextInput("Nama", "nama", formData.nama, handleChange)}
+            {renderTextInput(
+              "Posisi",
+              "jabatan",
+              formData.jabatan,
+              handleChange
+            )}
+            {renderTextArea(
+              "Pendidikan",
+              "pendidikan",
+              formData.pendidikan,
+              handleChange
+            )}
+            {renderTextArea(
+              "Publikasi Ilmiah",
+              "publikasi",
+              formData.publikasi,
+              handleChange
+            )}
+            {renderTextArea(
+              "Biografi",
+              "biografi",
+              formData.biografi,
+              handleChange
+            )}
+            {renderTextInput(
+              "Contact",
+              "kontak",
+              formData.kontak,
+              handleChange,
+              "email"
+            )}
           </div>
-
           <button
             type="submit"
             className="bg-blue-500 mt-4 flex w-full justify-center text-white p-2 rounded"
@@ -220,5 +197,42 @@ const DosenInput: React.FC<inputDosenProps> = ({ onSuccess }) => {
     </div>
   );
 };
+
+// Helper functions for rendering inputs
+const renderTextInput = (
+  label: string,
+  name: string,
+  value: string,
+  onChange: React.ChangeEventHandler<HTMLInputElement>,
+  type: string = "text"
+) => (
+  <div className="col-span-3">
+    <label className="text-gray-700">{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-12"
+    />
+  </div>
+);
+
+const renderTextArea = (
+  label: string,
+  name: string,
+  value: string,
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>
+) => (
+  <div className="col-span-2">
+    <label className="text-gray-700">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onChange={onChange}
+      className="text-gray-900 border border-gray-300 rounded-lg bg-gray-50 w-full h-12"
+    />
+  </div>
+);
 
 export default DosenInput;

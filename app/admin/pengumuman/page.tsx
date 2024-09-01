@@ -1,22 +1,25 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import InputPengumuman from "./components/inputPengumuman";
 import ListPengumuman from "./components/ListPengumuman";
-import { Pengumuman } from "@prisma/client";
 import apiClient from "@/app/lib/axios/axios";
+import { useFetch } from "@/app/hooks/useFetch";
+import Loading from "@/app/components/common/loading/Loading";
 
 const PagePengumuman = () => {
-  const [listData, setListData] = useState<Pengumuman[]>([]);
+  const {
+    data: listData,
+    isError,
+    isLoading,
+    mutate,
+  } = useFetch("/api/pengumuman");
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await apiClient.get(`/api/pengumuman`);
       // console.log(response.data);
-      setListData(response.data);
+      mutate(response.data, false);
     } catch (error: any) {
       if (error.response) {
         console.error(error.response.data.error);
@@ -24,7 +27,15 @@ const PagePengumuman = () => {
         console.error(error);
       }
     }
-  };
+  }, [mutate]);
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    );
+  if (isError) return <p>Error loading data</p>;
 
   return (
     <div>

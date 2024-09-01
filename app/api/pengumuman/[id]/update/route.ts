@@ -3,11 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function PUT(request: NextRequest) {
-  const { id, judul, text, gambar, url_gambar, user_id } = await request.json();
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const { judul, text, gambar, url_gambar, user_id } = await request.json();
 
   const pengumuman = await prisma.pengumuman.findUnique({
-    where: { id },
+    where: { id: Number(id) },
   });
 
   if (!pengumuman) {
@@ -19,7 +23,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const updatePengumuman = await prisma.pengumuman.update({
-      where: { id },
+      where: { id: Number(id) },
       data: {
         judul,
         text,

@@ -10,37 +10,26 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import Class from "./components/Class";
+import { useFetch } from "@/app/hooks/useFetch";
+import Loading from "@/app/components/common/loading/Loading";
 
-interface ClassWithRelations extends ClassType {
-  dosen: Dosen; // Relation to Dosen
-  Mahasiswa_has_class: (Mahasiswa_has_class & {
-    mahasiswa: Mahasiswa;
-  })[];
-}
 const PageClass: React.FC = () => {
-  const [dataClass, setDataClass] = useState<ClassWithRelations>();
-
   const id = useParams().id;
 
-  useEffect(() => {
-    fetchData(id);
-  }, [id]);
-  const fetchData = async (id: any) => {
-    try {
-      const result = await apiClient.get(`/api/class/${id}`);
-      const data = result.data;
-      console.log(data);
+  const { data: dataClass, isLoading, isError } = useFetch(`/api/class/${id}`);
 
-      setDataClass(data);
-    } catch (error) {
-      console.error("gagal mengambil data:", error);
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="bg-gray-50 min-h-screen flex fitems-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="bg-gray-50 min-h-screen flex flex-col items-center justify-between">
-        {dataClass && <Class dataClass={dataClass} />}
+        <Class dataClass={dataClass} />
       </div>
     </div>
   );

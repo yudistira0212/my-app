@@ -5,65 +5,52 @@ import Loading from "@/app/components/common/loading/Loading";
 import KontakHeader from "./components/KontakHeader";
 import KontakForm from "./components/KontakForm";
 import apiClient from "@/app/lib/axios/axios";
+import { useFetch } from "@/app/hooks/useFetch";
 
 const PageKontak = () => {
-  const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(true);
-  const [error, setError] = useState("");
-  const [kontakData, setKontakData] = useState({
-    email: "",
-    telephone: "",
-    alamat: "",
-    sosialMedia: "",
-  });
 
-  useEffect(() => {
-    fetchKontak();
-  }, []);
+  const {
+    data: dataKontak,
+    isLoading,
+    isError,
+    mutate,
+  } = useFetch(`/api/kontak/1`);
 
   const fetchKontak = useCallback(async () => {
     try {
-      setLoading(true);
       const res = await apiClient.get("/api/kontak/1");
       const data = res.data;
 
-      setKontakData({
-        email: data.email,
-        telephone: data.telephone,
-        alamat: data.alamat,
-        sosialMedia: data.sosial_media,
-      });
-      setError("");
+      mutate(data, false);
     } catch (error: any) {
       if (error.response) {
         console.error(error.response.data.error);
       } else {
         console.error(error);
       }
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  }, [mutate]);
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <p>Error loading data.</p>;
+  }
 
   return (
     <div className="flex flex-col bg-white p-4">
-      {loading ? (
-        <div className="flex justify-center items-center w-full h-screen ">
-          <Loading />
-        </div>
-      ) : (
-        <>
-          <KontakHeader isEdit={isEdit} setIsEdit={setIsEdit} />
-          <KontakForm
-            isEdit={isEdit}
-            kontakData={kontakData}
-            setKontakData={setKontakData}
-            setError={setError}
-            setLoading={setLoading}
-            fetchKontak={fetchKontak}
-          />
-        </>
-      )}
+      <KontakHeader isEdit={isEdit} setIsEdit={setIsEdit} />
+      <KontakForm
+        isEdit={isEdit}
+        kontakData={dataKontak}
+        fetchKontak={fetchKontak}
+      />
     </div>
   );
 };

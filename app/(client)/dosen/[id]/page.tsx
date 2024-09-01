@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ImageComponent from "./components/Image";
-import { Dosen } from "@prisma/client";
-import apiClient from "../../../lib/axios/axios";
+
 import { useParams } from "next/navigation";
 import Pendidikan from "./components/Pendidikan";
 import Nama from "./components/Nama";
@@ -10,28 +9,21 @@ import Biografi from "./components/Biografi";
 import PublikasiIlmiah from "./components/PublikasiIlmiah";
 import Link from "next/link";
 import Contact from "./components/Contact";
+import { useFetch } from "@/app/hooks/useFetch";
+import Loading from "@/app/components/common/loading/Loading";
 
 const PageDosen = () => {
-  const [dataDosen, setDataDosen] = useState<Dosen>();
-
   const { id } = useParams();
 
-  useEffect(() => {
-    fetchData(id);
-  }, [id]);
+  const { data: dataDosen, isLoading, isError } = useFetch(`/api/dosen/${id}`);
 
-  const fetchData = async (id: string | string[]) => {
-    try {
-      await apiClient.get(`/api/dosen/${id}`).then((response) => {
-        setDataDosen(response.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-      if (error.response) {
-      }
-      console.log("filed fetch data", error.response.data.error);
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="bg-gray-50 min-h-screen flex fitems-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div>

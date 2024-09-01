@@ -1,64 +1,72 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Class, Dosen } from "@prisma/client";
 import InputClass from "./components/inputClass";
 import ListClass from "./components/listClass";
+import { useFetch } from "@/app/hooks/useFetch";
 import apiClient from "@/app/lib/axios/axios";
-
-interface ClassWithDosen extends Class {
-  dosen: Dosen;
-}
+import Loading from "@/app/components/common/loading/Loading";
 
 const PageClass: React.FC = () => {
-  const [classes, setClasses] = useState<ClassWithDosen[]>([]);
-  const [dataDosen, setDataDosen] = useState<Dosen[]>([]);
-  useEffect(() => {
-    fetchData();
-    fetchDosen();
-  }, []);
+  // Menggunakan useFetch untuk mendapatkan data kelas
+  const {
+    data: classes,
+    isLoading: clsLoading,
+    isError: clsError,
+    mutate: mutateClasses,
+  } = useFetch("/api/class");
 
-  const fetchData = useCallback(async (keyword?: string) => {
-    try {
-      const response = await apiClient.get("/api/class", {
-        params: {
-          search: keyword,
-        },
-      });
+  // Menggunakan useFetch untuk mendapatkan data dosen
+  const {
+    data: dataDosen,
+    isLoading: dosenLoading,
+    isError: dosenError,
+    // mutate: mutateDosen,
+  } = useFetch("/api/dosen");
 
-      setClasses(response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response.data.error);
-      } else {
-        console.error(error);
+  // Callback untuk memperbarui data kelas
+  const fetchData = useCallback(
+    async (keyword?: string) => {
+      try {
+        const response = await apiClient.get("/api/class", {
+          params: {
+            search: keyword,
+          },
+        });
+        mutateClasses(response.data, false); // Mutasi cache tanpa revalidasi
+      } catch (error: any) {
+        console.error(error.response ? error.response.data.error : error);
       }
-    }
-  }, []);
+    },
+    [mutateClasses]
+  );
 
-  const fetchDosen = useCallback(async () => {
-    try {
-      const response = await apiClient.get("/api/dosen");
+  if (clsLoading || dosenLoading) {
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <Loading />
+      </div>
+    );
+  }
 
-      setDataDosen(response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response.data.error);
-      } else {
-        console.error(error);
-      }
-    }
-  }, []);
+  if (clsError || dosenError) {
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <p>Error loading data</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white p-4">
       <h1 className="text-2xl font-bold mb-6">Class</h1>
       <div className="py-4">
-        <InputClass onSuccess={fetchData} />
+        <InputClass onSuccess={fetchData} dosenList={dataDosen} />
       </div>
 
       <div>
-        {dataDosen && (
+        {dataDosen && classes && (
           <ListClass
             classes={classes}
             fetcData={fetchData}

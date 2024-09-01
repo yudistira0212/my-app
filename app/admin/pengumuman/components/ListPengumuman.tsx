@@ -64,7 +64,10 @@ const ListPengumuman: React.FC<ListPengumumanProps> = ({
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
-                    <EditPengumuman id={value.id} onSuccess={fechingData} />
+                    <EditPengumuman
+                      pengumuman={value}
+                      onSuccess={fechingData}
+                    />
 
                     <DeletePengumuman
                       id={value.id}

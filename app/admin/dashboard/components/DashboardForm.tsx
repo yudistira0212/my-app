@@ -1,42 +1,43 @@
 "use client";
 
 import React, { useState } from "react";
-
 import { toast } from "react-toastify";
 import { updateImage } from "@/app/lib/controllers/imageControllers";
 import ImageUpload from "@/app/components/common/image/ImageUpload";
 import Input from "@/app/components/common/input/Input";
 import Textarea from "@/app/components/common/textArea/Textarea";
 import Button from "@/app/components/common/button/Button";
-import apiClient from "@/app/lib/axios/axios";
+import { useSaveProdi } from "@/app/hooks/useSaveProdi";
+import { Prodi } from "@prisma/client";
 
 interface DashboardFormProps {
   isEdit: boolean;
-  prodiData: {
-    namaProdi: string;
-    deskripsi: string;
-    visi: string;
-    misi: string;
-    tujuan: string;
-    sejarah: string;
-    infoLainnya: string;
-    logoProdiNama: string;
-    logoProdiUrl: string;
-    logoUniversitasNama: string;
-    logoUniversitasUrl: string;
-  };
-  setProdiData: React.Dispatch<React.SetStateAction<any>>;
+  // prodiData: {
+  //   nama: string;
+  //   deskripsi: string;
+  //   visi: string;
+  //   misi: string;
+  //   tujuan: string;
+  //   sejarah: string;
+  //   infoLainnya: string;
+  //   logoProdiNama: string;
+  //   logoProdiUrl: string;
+  //   logoUniversitasNama: string;
+  //   logoUniversitasUrl: string;
+  // };
+  prodiData: Prodi;
+  // setDataProdi?: React.Dispatch<React.SetStateAction<any>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  fetchProdi: () => void;
+  // setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchProdi?: () => void;
 }
 
 const DashboardForm: React.FC<DashboardFormProps> = ({
   isEdit,
   prodiData,
-  setProdiData,
+  // setDataProdi,
   setError,
-  setLoading,
+  // setLoading,
   fetchProdi,
 }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -44,6 +45,9 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
   const [logoProdiPreview, setLogoProdiPreview] = useState("");
   const [logoUniversitas, setLogoUniversitas] = useState<File | null>(null);
   const [logoUniversitasPreview, setLogoUniversitasPreview] = useState("");
+  const [dataProdi, setDataProdi] = useState<Prodi>(prodiData);
+
+  const { saveProdi } = useSaveProdi();
 
   const handleFileChangeProdi = (file: File | null, preview: string) => {
     setLogoProdi(file);
@@ -58,14 +62,13 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    setLoading(true);
 
     try {
-      let logoProdiName = prodiData.logoProdiNama;
-      let logoProdiURL = prodiData.logoProdiUrl;
+      let logoProdiName = dataProdi.logo_prodi;
+      let logoProdiURL = dataProdi.url_logo_prodi;
 
-      let logoUniversitasName = prodiData.logoUniversitasNama;
-      let logoUniversitasURL = prodiData.logoUniversitasUrl;
+      let logoUniversitasName = dataProdi.logo_universitas;
+      let logoUniversitasURL = dataProdi.url_logo_universitas;
 
       if (logoProdi) {
         const rute = "utama/prodi";
@@ -95,42 +98,24 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
         logoUniversitasURL = updateResult.url;
       }
 
-      let response = null;
-
       const data = {
-        nama: prodiData.namaProdi,
-        deskripsi: prodiData.deskripsi,
-        visi: prodiData.visi,
-        misi: prodiData.misi,
-        tujuan: prodiData.tujuan,
-        sejarah: prodiData.sejarah,
-        info_lainnya: prodiData.infoLainnya,
+        nama: dataProdi.nama,
+        deskripsi: dataProdi.deskripsi,
+        visi: dataProdi.visi,
+        misi: dataProdi.misi,
+        tujuan: dataProdi.tujuan,
+        sejarah: dataProdi.sejarah,
+        info_lainnya: dataProdi.info_lainnya,
         logo_prodi: logoProdiName,
         url_logo_prodi: logoProdiURL,
         logo_universitas: logoUniversitasName,
         url_logo_universitas: logoUniversitasURL,
       };
 
-      const cekData = await apiClient.get(`/api/prodi`);
-      if (cekData.data.length === 0) {
-        response = await apiClient.post(`/api/prodi`, {
-          data,
-        });
-      } else {
-        response = await apiClient.patch(`/api/prodi/1/update`, {
-          data,
-        });
-      }
-
-      toast.success("Prodi successfully saved.");
-    } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error(error);
-      }
+      await saveProdi(data);
+    } catch (error) {
+      setError("Failed to save Prodi data.");
     } finally {
-      setLoading(false);
       setSubmitting(false);
     }
   };
@@ -143,7 +128,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
             id="logoProdi"
             label="Prodi"
             isEdit={isEdit}
-            fileUrl={prodiData.logoProdiUrl}
+            fileUrl={dataProdi.url_logo_prodi}
             filePreview={logoProdiPreview}
             onFileChange={handleFileChangeProdi}
           />
@@ -151,7 +136,7 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
             id="logoUniversitas"
             label="Universitas"
             isEdit={isEdit}
-            fileUrl={prodiData.logoUniversitasUrl}
+            fileUrl={dataProdi.url_logo_universitas}
             filePreview={logoUniversitasPreview}
             onFileChange={handleFileChangeUniversitas}
           />
@@ -160,20 +145,18 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
           <Input
             id="namaProdi"
             isEdit={isEdit}
-            value={prodiData.namaProdi ?? ""}
-            onChange={(value) =>
-              setProdiData({ ...prodiData, namaProdi: value })
-            }
+            value={dataProdi.nama ?? ""}
+            onChange={(value) => setDataProdi({ ...dataProdi, nama: value })}
             label="Nama Program Studi"
           />
           <Textarea
             id="Deskripsi"
             isEdit={isEdit}
-            value={prodiData.deskripsi ?? ""}
+            value={dataProdi.deskripsi ?? ""}
             placeholder="Deskripsi"
             label="Deskripsi"
             onChange={(value) =>
-              setProdiData({ ...prodiData, deskripsi: value })
+              setDataProdi({ ...dataProdi, deskripsi: value })
             }
             classTextarea="h-64"
           />
@@ -184,43 +167,43 @@ const DashboardForm: React.FC<DashboardFormProps> = ({
         <Textarea
           id="visi"
           isEdit={isEdit}
-          value={prodiData.visi ?? ""}
+          value={dataProdi.visi ?? ""}
           placeholder="Visi"
           label="Visi"
-          onChange={(value) => setProdiData({ ...prodiData, visi: value })}
+          onChange={(value) => setDataProdi({ ...dataProdi, visi: value })}
         />
         <Textarea
           id="misi"
           isEdit={isEdit}
-          value={prodiData.misi ?? ""}
+          value={dataProdi.misi ?? ""}
           placeholder="Misi"
           label="Misi"
-          onChange={(value) => setProdiData({ ...prodiData, misi: value })}
+          onChange={(value) => setDataProdi({ ...dataProdi, misi: value })}
         />
         <Textarea
           id="tujuan"
           isEdit={isEdit}
-          value={prodiData.tujuan ?? ""}
+          value={dataProdi.tujuan ?? ""}
           placeholder="Tujuan"
           label="Tujuan"
-          onChange={(value) => setProdiData({ ...prodiData, tujuan: value })}
+          onChange={(value) => setDataProdi({ ...dataProdi, tujuan: value })}
         />
         <Textarea
           id="sejarah"
           isEdit={isEdit}
-          value={prodiData.sejarah ?? ""}
+          value={dataProdi.sejarah ?? ""}
           placeholder="Sejarah Singkat Prodi"
           label="Sejarah Singkat Prodi"
-          onChange={(value) => setProdiData({ ...prodiData, sejarah: value })}
+          onChange={(value) => setDataProdi({ ...dataProdi, sejarah: value })}
         />
         <Textarea
           id="Informasi_Lainnya"
           isEdit={isEdit}
-          value={prodiData.infoLainnya ?? ""}
+          value={dataProdi.info_lainnya ?? ""}
           placeholder="Informasi Lainnya"
           label="Informasi Lainnya"
           onChange={(value) =>
-            setProdiData({ ...prodiData, infoLainnya: value })
+            setDataProdi({ ...dataProdi, info_lainnya: value })
           }
         />
       </div>

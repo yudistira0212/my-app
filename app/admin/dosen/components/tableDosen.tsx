@@ -10,7 +10,7 @@ import Image from "next/image";
 import { images } from "@/app/lib/image/images";
 interface tableDosenProps {
   dosenList: Dosen[];
-  fetchDosen: () => void;
+  fetchDosen: any;
 }
 
 const TableDosen: React.FC<tableDosenProps> = ({ dosenList, fetchDosen }) => {
@@ -66,7 +66,7 @@ const TableDosen: React.FC<tableDosenProps> = ({ dosenList, fetchDosen }) => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
-                    <EditDosen id={dosen.id} onSuccess={handelFetching} />
+                    <EditDosen dataDosen={dosen} onSuccess={handelFetching} />
 
                     <DeleteDosen
                       id={dosen.id}
