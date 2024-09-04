@@ -124,6 +124,7 @@ const EditPengumuman: React.FC<EditProps> = ({ pengumuman, onSuccess }) => {
               />
               <input
                 type="file"
+                accept="image/png, image/jpeg, image/jpg, image/gif"
                 onChange={handleFileChange}
                 ref={fileInputRef}
                 hidden

@@ -8,8 +8,14 @@ import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 
 interface Props {
   dataPengumuman: TypePengumuman[];
+  isLoading?: boolean;
+  isError?: boolean;
 }
-const Pengumuman: React.FC<Props> = ({ dataPengumuman }) => {
+const Pengumuman: React.FC<Props> = ({
+  dataPengumuman,
+  isLoading,
+  isError,
+}) => {
   const router = useRouter();
   const sliderRef = useRef<HTMLDivElement>(null);
   // const [dataPengumuman, setDataPengumuman] = useState<TypePengumuman[]>([]);
@@ -39,7 +45,7 @@ const Pengumuman: React.FC<Props> = ({ dataPengumuman }) => {
   }, [handleSlideNext]);
 
   return (
-    <div className="relative overflow-hidden w-full">
+    <div className="relative overflow-hidden w-full p-4 ">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold">Pengumuman Prodi</h1>
       </div>

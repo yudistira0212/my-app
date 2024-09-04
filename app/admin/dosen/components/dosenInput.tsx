@@ -149,6 +149,7 @@ const DosenInput: React.FC<InputDosenProps> = ({ onSuccess }) => {
                 type="file"
                 onChange={handleFileChange}
                 ref={fileInputRef}
+                accept="image/png, image/jpeg, image/jpg, image/gif"
                 hidden
               />
             </div>

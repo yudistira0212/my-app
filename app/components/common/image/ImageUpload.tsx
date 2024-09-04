@@ -52,6 +52,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             disabled={isEdit}
             className="text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-double"
             type="file"
+            accept="image/png, image/jpeg, image/jpg, image/gif"
             onChange={handleChange}
             hidden
           />

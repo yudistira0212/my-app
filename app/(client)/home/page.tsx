@@ -7,6 +7,7 @@ import Profil from "./components/profil";
 import HomeHeader from "./components/HomeHeader";
 import Class from "./components/Class";
 import { useFetch } from "@/app/hooks/useFetch";
+import SkeletonBox from "../../components/ui/skeleton/SkeletonBox";
 import type {
   Class as ClassType,
   Dosen as DosenType,
@@ -19,31 +20,77 @@ interface ClassWithDosen extends ClassType {
 }
 
 const PageHome: React.FC = () => {
-  const { data: DataClass, isLoading: isLoadingClass } = useFetch("/api/class");
-  const { data: DataPengumuman, isLoading: isLoadingPengumuman } =
-    useFetch("/api/pengumuman");
-  const { data: DataDosen, isLoading: isLoadingDosen } = useFetch("/api/dosen");
-  const { data: dataProdi, isLoading: isLoadingProdi } =
-    useFetch("/api/prodi/1");
-
-  const isLoading =
-    isLoadingClass || isLoadingPengumuman || isLoadingDosen || isLoadingProdi;
+  const {
+    data: DataClass,
+    isLoading: isLoadingClass,
+    isError: isErrorClass,
+  } = useFetch("/api/class");
+  const {
+    data: DataPengumuman,
+    isLoading: isLoadingPengumuman,
+    isError: isErrorPengumuman,
+  } = useFetch("/api/pengumuman");
+  const {
+    data: DataDosen,
+    isLoading: isLoadingDosen,
+    isError: isErrorDosen,
+  } = useFetch("/api/dosen");
+  const {
+    data: dataProdi,
+    isLoading: isLoadingProdi,
+    isError: isErrorProdi,
+  } = useFetch("/api/prodi/1");
 
   return (
     <div>
       <div>
         <HomeHeader />
       </div>
-      <div className="m-4">
+      <div className="my-8">
         <Class dataClass={DataClass || []} loading={isLoadingClass} />
       </div>
-      <div>
-        <Pengumuman dataPengumuman={DataPengumuman || []} />
+      <div className="my-8">
+        {isLoadingPengumuman ? (
+          <div className="w-full my-4 h-[50vh]  rounded-full">
+            <SkeletonBox />
+          </div>
+        ) : (
+          <Pengumuman dataPengumuman={DataPengumuman || []} />
+        )}
+        {isErrorPengumuman && (
+          <div className="w-full my-4 h-[50vh] flex items-center justify-center  rounded-full">
+            <h2>Gagal Mengambil data Pengumuman</h2>
+          </div>
+        )}
+      </div>
+      <div className="my-8">
+        {isLoadingDosen ? (
+          <div className="w-full my-4  h-[50vh]  rounded-full">
+            <SkeletonBox />
+          </div>
+        ) : (
+          <Dosen dataDosen={DataDosen || []} />
+        )}
+        {isErrorDosen && (
+          <div className="w-full my-4 h-[50vh] flex items-center justify-center  rounded-full">
+            <h2>Gagal Mengambil data Dosen</h2>
+          </div>
+        )}
       </div>
       <div>
-        <Dosen dataDosen={DataDosen || []} />
+        {isLoadingProdi ? (
+          <div className="w-full  h-[100vh]  rounded-full">
+            <SkeletonBox />
+          </div>
+        ) : (
+          <Profil dataProdi={dataProdi} />
+        )}
+        {isErrorProdi && (
+          <div className="w-full  h-[50vh] flex items-center justify-center  rounded-full">
+            <h2>Gagal Mengambil data Prfil</h2>
+          </div>
+        )}
       </div>
-      <div>{dataProdi && <Profil dataProdi={dataProdi} />}</div>
     </div>
   );
 };

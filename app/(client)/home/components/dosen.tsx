@@ -16,7 +16,7 @@ interface Props {
 }
 const Dosen: React.FC<Props> = ({ dataDosen }) => {
   return (
-    <div className="w-full bg-blue-900 py-8">
+    <div className="w-full bg-blue-900 p-4 ">
       <h2 className="text-center text-white text-2xl font-bold mb-4">
         DOSEN TEKNIK INFORMATIKA
       </h2>

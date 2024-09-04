@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Kontak" ADD COLUMN     "link_sosial_media" TEXT,
+ALTER COLUMN "email" SET DATA TYPE TEXT,
+ALTER COLUMN "telephone" SET DATA TYPE TEXT,
+ALTER COLUMN "alamat" SET DATA TYPE TEXT,
+ALTER COLUMN "sosial_media" SET DATA TYPE TEXT;

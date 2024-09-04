@@ -5,7 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 // getbyid
-export async function GET(req: NextRequest, { params }: any) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
 
   try {

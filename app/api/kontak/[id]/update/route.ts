@@ -26,6 +26,7 @@ export async function PATCH(
         telephone: body.telephone,
         alamat: body.alamat,
         sosial_media: body.sosial_media,
+        link_sosial_media: body.link_sosial_media,
         prodi_id: body.prodi_id,
       },
     });

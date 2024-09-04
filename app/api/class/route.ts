@@ -8,31 +8,14 @@ const prisma = new PrismaClient();
 // get all
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-
-  const keyword = searchParams.get("search");
-
   try {
     let classes;
 
-    if (keyword) {
-      classes = await prisma.class.findMany({
-        where: {
-          nama: {
-            contains: keyword,
-          },
-        },
-        include: {
-          dosen: true,
-        },
-      });
-    } else {
-      classes = await prisma.class.findMany({
-        include: {
-          dosen: true,
-        },
-      });
-    }
+    classes = await prisma.class.findMany({
+      include: {
+        dosen: true,
+      },
+    });
 
     return NextResponse.json(classes);
   } catch (error) {

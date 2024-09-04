@@ -29,7 +29,7 @@ const Class: React.FC<Props> = ({ dataClass, loading }) => {
   );
 
   return (
-    <div className=" min-h-screen">
+    <div className=" min-h-screen bg-gray-50 rounded p-4 ">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold">Class Info</h1>
       </div>
@@ -70,14 +70,16 @@ const Class: React.FC<Props> = ({ dataClass, loading }) => {
       </form>
 
       <div>
-        {loading && <ClassSkeleton />}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
+        <div className="my-6">
+          {loading && <ClassSkeleton />}
           {filteredClasses.length === 0 && !loading && (
             <h1 className="text-xl font-bold uppercase">
               Tidak ada kelas yang tersedia
             </h1>
           )}
+        </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
           {filteredClasses.map((value, index) => (
             <Link
               key={value.id}

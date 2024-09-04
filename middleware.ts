@@ -35,14 +35,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/admin/dashboard", req.url));
   }
 
-  if (!token && path.endsWith("/update")) {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
-  }
-  if (!token && path.endsWith("/delete")) {
-    return NextResponse.redirect(new URL("/unauthorized", req.url));
-  }
-
-  // Jika ada token, lanjutkan ke request yang diminta
+  // if (!token && path.endsWith("/update")) {
+  //   return NextResponse.redirect(new URL("/unauthorized", req.url));
+  // }
+  // if (!token && path.endsWith("/delete")) {
+  //   return NextResponse.redirect(new URL("/unauthorized", req.url));
+  // }
   return NextResponse.next();
 }
 
@@ -53,7 +51,7 @@ export const config = {
     "/admin/:path*",
     "/register",
     "/login",
-    "/api/:path*/update",
-    "/api/:path*/delete",
+    // "/api/:path*/update",
+    // "/api/:path*/delete",
   ],
 };

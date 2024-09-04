@@ -136,6 +136,7 @@ const EditDosen: React.FC<EditProps> = ({ onSuccess, dataDosen }) => {
               />
               <input
                 type="file"
+                accept="image/png, image/jpeg, image/jpg, image/gif"
                 onChange={handleFileChange}
                 ref={fileInputRef}
                 hidden

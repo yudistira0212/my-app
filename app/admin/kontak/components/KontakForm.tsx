@@ -31,6 +31,7 @@ const KontakForm: React.FC<KontakFormProps> = ({
         telephone: formData.telephone,
         alamat: formData.alamat,
         sosial_media: formData.sosial_media,
+        link_sosial_media: formData.link_sosial_media,
         prodi_id: 1,
       };
 
@@ -82,6 +83,16 @@ const KontakForm: React.FC<KontakFormProps> = ({
         value={formData.sosial_media ?? ""}
         onChange={(value) => setFormData({ ...formData, sosial_media: value })}
         id="sosialMedia"
+        label="Sosial Media"
+        type="text"
+      />
+      <Input
+        isEdit={isEdit}
+        value={formData.link_sosial_media ?? ""}
+        onChange={(value) =>
+          setFormData({ ...formData, link_sosial_media: value })
+        }
+        id="link_sosial_media"
         label="URL Sosial Media"
         type="text"
       />

@@ -129,6 +129,7 @@ const InputPengumuman: React.FC<PengumumanInputProps> = ({ onSuccess }) => {
               <input
                 type="file"
                 onChange={handleFileChange}
+                accept="image/png, image/jpeg, image/jpg, image/gif"
                 ref={fileInputRef}
                 hidden
               />

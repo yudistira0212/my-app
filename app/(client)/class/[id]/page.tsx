@@ -20,11 +20,16 @@ const PageClass: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-50 min-h-screen flex fitems-center justify-center">
+      <div className="bg-gray-50 h-screen flex items-center justify-center">
         <Loading />
       </div>
     );
   }
+
+  if (isError)
+    return (
+      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
+    );
 
   return (
     <div>

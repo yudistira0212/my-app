@@ -19,11 +19,16 @@ const PageDosen = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-gray-50 min-h-screen flex fitems-center justify-center">
+      <div className="bg-gray-50 h-screen flex items-center justify-center">
         <Loading />
       </div>
     );
   }
+
+  if (isError)
+    return (
+      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
+    );
 
   return (
     <div>
@@ -45,7 +50,7 @@ const PageDosen = () => {
               </div>
             </div>
           </div>
-          <div className="md:w-2/3  pt-32 text-justify">
+          <div className="md:w-2/3  pt-32 ">
             <div className="uppercase">
               <Nama
                 nama={dataDosen?.nama ?? ""}
@@ -54,10 +59,10 @@ const PageDosen = () => {
               <div className="w-full border-b-2 border-b-black"></div>
               <br />
             </div>
-            <div>
+            <div className="text-justify">
               <Biografi biografi={dataDosen?.biografi ?? ""} />
             </div>
-            <div>
+            <div className="text-justify">
               <PublikasiIlmiah publikasiIlmiah={dataDosen?.publikasi ?? ""} />
             </div>
           </div>
