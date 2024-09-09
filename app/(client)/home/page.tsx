@@ -14,6 +14,7 @@ import type {
   Pengumuman as PengumumanType,
   Prodi,
 } from "@prisma/client";
+import Universitas from "@/app/components/client/footer/universitas";
 
 interface ClassWithDosen extends ClassType {
   dosen: DosenType;
@@ -62,6 +63,9 @@ const PageHome: React.FC = () => {
             <h2>Gagal Mengambil data Pengumuman</h2>
           </div>
         )}
+      </div>
+      <div className="w-full">
+        <Universitas />
       </div>
       <div className="my-8">
         {isLoadingDosen ? (
