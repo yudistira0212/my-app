@@ -8,17 +8,36 @@ import HomeHeader from "./components/HomeHeader";
 import Class from "./components/Class";
 import { useFetch } from "@/app/hooks/useFetch";
 import SkeletonBox from "../../components/ui/skeleton/SkeletonBox";
-import type {
-  Class as ClassType,
-  Dosen as DosenType,
-  Pengumuman as PengumumanType,
-  Prodi,
-} from "@prisma/client";
 import Universitas from "@/app/components/client/footer/universitas";
 
-interface ClassWithDosen extends ClassType {
-  dosen: DosenType;
-}
+// Komponen reusable untuk penanganan status loading dan error
+
+const SectionWrapper = ({
+  isLoading,
+  isError,
+  children,
+  height = "50vh",
+}: any) => {
+  if (isLoading) {
+    return (
+      <div className={`w-full h-[${height}] my-4 rounded-full`}>
+        <SkeletonBox />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div
+        className={`w-full h-[${height}] my-4 flex items-center justify-center rounded-full`}
+      >
+        <h2>Gagal Mengambil Data</h2>
+      </div>
+    );
+  }
+
+  return children;
+};
 
 const PageHome: React.FC = () => {
   const {
@@ -42,58 +61,45 @@ const PageHome: React.FC = () => {
     isError: isErrorProdi,
   } = useFetch("/api/prodi/1");
 
+  console.log({ isErrorClass, isLoadingClass, DataClass });
+
   return (
     <div>
-      <div>
-        <HomeHeader />
-      </div>
+      <HomeHeader />
+
       <div className="my-8">
-        <Class dataClass={DataClass || []} loading={isLoadingClass} />
+        <Class
+          dataClass={DataClass || []}
+          loading={isLoadingClass}
+          error={isErrorClass}
+        />
       </div>
+
       <div className="my-8">
-        {isLoadingPengumuman ? (
-          <div className="w-full my-4 h-[50vh]  rounded-full">
-            <SkeletonBox />
-          </div>
-        ) : (
+        <SectionWrapper
+          isLoading={isLoadingPengumuman}
+          isError={isErrorPengumuman}
+        >
           <Pengumuman dataPengumuman={DataPengumuman || []} />
-        )}
-        {isErrorPengumuman && (
-          <div className="w-full my-4 h-[50vh] flex items-center justify-center  rounded-full">
-            <h2>Gagal Mengambil data Pengumuman</h2>
-          </div>
-        )}
+        </SectionWrapper>
       </div>
-      <div className="w-full">
-        <Universitas />
-      </div>
+
+      <Universitas />
+
       <div className="my-8">
-        {isLoadingDosen ? (
-          <div className="w-full my-4  h-[50vh]  rounded-full">
-            <SkeletonBox />
-          </div>
-        ) : (
+        <SectionWrapper isLoading={isLoadingDosen} isError={isErrorDosen}>
           <Dosen dataDosen={DataDosen || []} />
-        )}
-        {isErrorDosen && (
-          <div className="w-full my-4 h-[50vh] flex items-center justify-center  rounded-full">
-            <h2>Gagal Mengambil data Dosen</h2>
-          </div>
-        )}
+        </SectionWrapper>
       </div>
+
       <div>
-        {isLoadingProdi ? (
-          <div className="w-full  h-[100vh]  rounded-full">
-            <SkeletonBox />
-          </div>
-        ) : (
+        <SectionWrapper
+          isLoading={isLoadingProdi}
+          isError={isErrorProdi}
+          height="100vh"
+        >
           <Profil dataProdi={dataProdi} />
-        )}
-        {isErrorProdi && (
-          <div className="w-full  h-[50vh] flex items-center justify-center  rounded-full">
-            <h2>Gagal Mengambil data Prfil</h2>
-          </div>
-        )}
+        </SectionWrapper>
       </div>
     </div>
   );

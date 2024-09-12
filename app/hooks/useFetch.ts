@@ -5,25 +5,35 @@ const fetcher = (url: string) =>
   apiClient
     .get(url)
     .then((res) => res.data)
-    .catch((err) => console.log("erorr get data : ", err));
+    .catch((error) => {
+      console.log("Error fetching data: ", error);
+      throw error;
+    });
 
-// Konfigurasi SWR untuk caching
 const swrConfig: SWRConfiguration = {
-  // dedupingInterval: 60000, // 60 detik, mencegah pengambilan ulang data dalam 60 detik
-  revalidateOnFocus: true, // Data akan direvalidasi saat halaman mendapat fokus
+  dedupingInterval: 60000, // Mencegah pengambilan ulang data dalam 60 detik
+  revalidateOnFocus: false, // Data akan direvalidasi saat halaman mendapat fokus
   revalidateOnReconnect: true, // Data akan direvalidasi ketika koneksi kembali
-  shouldRetryOnError: true, // Default true, bisa di-custom lebih lanjut
-  errorRetryCount: 3, // Jumlah maksimum percobaan ulang
-  errorRetryInterval: 5000, // Interval antara percobaan ulang
+  shouldRetryOnError: true, // Akan mencoba ulang jika terjadi kesalahan
+  errorRetryCount: 3, // Maksimum 3 kali percobaan ulang
+  errorRetryInterval: 5000, // Interval 5 detik antara percobaan ulang
+  onSuccess: (data) => {
+    console.log("Data berhasil diambil:", data);
+  },
+  onError: (error) => {
+    console.log("Terjadi kesalahan:", error);
+  },
 };
 
 export function useFetch(url: string) {
-  const { data, error, mutate } = useSWR(url, fetcher);
+  const { data, error, mutate } = useSWR(url, fetcher, swrConfig);
+
+  console.log({ data, error });
 
   return {
     data,
     isLoading: !error && !data,
-    isError: error,
+    isError: !!error, // Menandakan ada kesalahan
     mutate, // Menambahkan mutate ke dalam return statement
   };
 }

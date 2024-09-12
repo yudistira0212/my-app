@@ -18,6 +18,11 @@ const PageClass: React.FC = () => {
 
   const { data: dataClass, isLoading, isError } = useFetch(`/api/class/${id}`);
 
+  if (isError)
+    return (
+      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
+    );
+
   if (isLoading) {
     return (
       <div className="bg-gray-50 h-screen flex items-center justify-center">
@@ -25,11 +30,6 @@ const PageClass: React.FC = () => {
       </div>
     );
   }
-
-  if (isError)
-    return (
-      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
-    );
 
   return (
     <div>

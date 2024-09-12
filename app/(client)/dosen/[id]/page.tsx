@@ -17,6 +17,11 @@ const PageDosen = () => {
 
   const { data: dataDosen, isLoading, isError } = useFetch(`/api/dosen/${id}`);
 
+  if (isError)
+    return (
+      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
+    );
+
   if (isLoading) {
     return (
       <div className="bg-gray-50 h-screen flex items-center justify-center">
@@ -24,11 +29,6 @@ const PageDosen = () => {
       </div>
     );
   }
-
-  if (isError)
-    return (
-      <h2 className="text-red-500 text-2xl  ">Error loading dosen data</h2>
-    );
 
   return (
     <div>

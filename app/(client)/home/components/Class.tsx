@@ -4,7 +4,7 @@ import Loading from "@/app/components/common/loading/Loading";
 import ClassSkeleton from "@/app/components/ui/skeleton/ClassSkeleton";
 import { Class as ClassType, Dosen } from "@prisma/client";
 import Link from "next/link";
-import React, { useState, useCallback, Suspense } from "react";
+import React, { useState, useCallback } from "react";
 
 interface ClassWhitDosen extends ClassType {
   dosen: Dosen;
@@ -13,8 +13,10 @@ interface ClassWhitDosen extends ClassType {
 interface Props {
   dataClass: ClassWhitDosen[];
   loading: boolean;
+  error: boolean;
 }
-const Class: React.FC<Props> = ({ dataClass, loading }) => {
+
+const Class: React.FC<Props> = ({ dataClass, loading, error }) => {
   const [search, setSearch] = useState("");
 
   const handleSearchChange = useCallback(
@@ -29,7 +31,7 @@ const Class: React.FC<Props> = ({ dataClass, loading }) => {
   );
 
   return (
-    <div className=" min-h-screen bg-gray-50 rounded p-4 ">
+    <div className="min-h-screen bg-gray-50 rounded p-4">
       <div className="flex justify-center">
         <h1 className="text-xl font-bold">Class Info</h1>
       </div>
@@ -61,7 +63,7 @@ const Class: React.FC<Props> = ({ dataClass, loading }) => {
           <input
             type="search"
             id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search..."
             value={search}
             onChange={handleSearchChange}
@@ -70,30 +72,41 @@ const Class: React.FC<Props> = ({ dataClass, loading }) => {
       </form>
 
       <div>
+        {/* Handling Error */}
+        {error && (
+          <div className="my-6 text-center">
+            <h1 className="text-2xl font-bold text-red-600">
+              Gagal memuat data kelas. Silakan coba lagi nanti.
+            </h1>
+          </div>
+        )}
+
         <div className="my-6">
-          {loading && <ClassSkeleton />}
-          {filteredClasses.length === 0 && !loading && (
+          {loading && !error && <ClassSkeleton />}
+          {filteredClasses.length === 0 && !loading && !error && (
             <h1 className="text-xl font-bold uppercase">
               Tidak ada kelas yang tersedia
             </h1>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
-          {filteredClasses.map((value, index) => (
-            <Link
-              key={value.id}
-              className="text-white p-3 rounded-3xl hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
-              href={`/class/${value.id}`}
-            >
-              <div className="flex flex-col gap-1 justify-center text-center">
-                <div>{value.nama}</div>
-                <div>{value.sks}</div>
-                <div>{value.dosen?.nama}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {!error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-6">
+            {filteredClasses.map((value, index) => (
+              <Link
+                key={value.id}
+                className="text-white p-3 rounded-3xl hover:bg-[#38415c] flex items-center bg-[#495579] justify-center"
+                href={`/class/${value.id}`}
+              >
+                <div className="flex flex-col gap-1 justify-center text-center">
+                  <div>{value.nama}</div>
+                  <div>{value.sks}</div>
+                  <div>{value.dosen?.nama}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
